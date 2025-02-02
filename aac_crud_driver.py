@@ -21,7 +21,7 @@ class AnimalShelter(object):
         PASS = 'i3-bNzTV6OF#V-\'a00e+=iKh&JQs'
         HOST = 'nv-desktop-services.apporto.com'
         PORT = 32471
-        DB = 'AAC'
+        DB = 'AAC-test'   # TODO: change this to 'AAC' for production
         COL = 'animals'
         #
         # Initialize Connection
