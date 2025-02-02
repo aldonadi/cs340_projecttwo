@@ -18,7 +18,7 @@ class AnimalShelter(object):
         # Connection Variables
         #
         USER = 'aacuser'
-        PASS = 'i3-bNzTV6OF#V-'a00e+=iKh&JQs'
+        PASS = 'i3-bNzTV6OF#V-\'a00e+=iKh&JQs'
         HOST = 'nv-desktop-services.apporto.com'
         PORT = 32471
         DB = 'AAC'
