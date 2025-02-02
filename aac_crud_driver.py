@@ -39,4 +39,11 @@ class AnimalShelter(object):
             raise Exception("Nothing to save, because data parameter is empty")
 
 # Create method to implement the R in CRUD.
+    def find(self, data):
+        if data is not None:
+            results = self.database.animals.find(data) # data should be a dictionary
+            return results
+        else:
+            raise Exception("Nothing to find, because data parameter is empty")
+
 
