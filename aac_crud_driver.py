@@ -26,8 +26,12 @@ class AnimalShelter(object):
         # 
         # Initialize Connection
         #
-        self.client = MongoClient('mongodb://%s:%s@%s:%d' % (USER,PASS,HOST,PORT))
+        self.client = MongoClient('mongodb://%s:%s' % (HOST,PORT))
+        print(f"{self.client.__repr__()}")
         self.database = self.client['%s' % (DB)]
+        print("authenticating...")
+        self.database.authenticate(USER, PASS)
+        print("authenticated!")
         self.collection = self.database['%s' % (COL)]
 
     def create(self, data):
