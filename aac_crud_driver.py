@@ -65,12 +65,17 @@ class AnimalShelter(object):
 
         Example:
             To find all documents where age is greater than 25:
-                query = {"breed": "Silver Tabby", "age_upon_outcome_in_weeks" : {"$gt": 50}}
-                results = self.read(query)
+                query = {"breed": "Bat", "age_upon_outcome_in_weeks" : {"$gt": 50}}
+                results = self.find(query)
         """
         if data is not None:
-            results = self.database.animals.find(data) # data should be a dictionary
-            return results
+            results = []     # if the find fails, results will be an empty list
+            try:
+                results = list(self.database.animals.find(data)) # data should be a dict
+            
+            finally:
+                return results
+
         else:
             raise Exception("Nothing to find, because data parameter is empty")
 
