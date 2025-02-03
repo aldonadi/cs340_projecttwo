@@ -21,7 +21,7 @@ class AnimalShelter(object):
         PASS = 'i3-bNzTV6OF#V-\'a00e+=iKh&JQs'
         HOST = 'nv-desktop-services.apporto.com'
         PORT = 32471
-        DB = 'AAC-test'   # TODO: change this to 'AAC' for production
+        DB = 'AAC'   # TODO: change this to 'AAC' for production
         COL = 'animals'
         #
         # Initialize Connection
@@ -30,16 +30,41 @@ class AnimalShelter(object):
         self.database = self.client['%s' % (DB)]
         self.collection = self.database['%s' % (COL)]
 
-# Complete this create method to implement the C in CRUD.
     def create(self, data):
+        """
+        Creates a new animal record.
+
+        Args:
+            data (dict): The animal record to be created, expected as a dictionary.
+
+        Returns:
+            bool: True if the insertion was successful and acknowledged by the database,
+                  False otherwise.
+
+        Raises:
+            Exception: If the `data` parameter is None or empty
+        """
         if data is not None:
             result = self.database.animals.insert_one(data)  # data should be dictionary 
             return result.acknowledged
         else:
             raise Exception("Nothing to save, because data parameter is empty")
 
-# Create method to implement the R in CRUD.
     def find(self, data):
+        """
+        Retrieves animal records based on an optional query filter.
+
+        Args:
+            query (dict): A dictionary specifying the query criteria to filter documents.
+
+        Returns:
+            list: A list of documents that match the query. If no documents are found, returns an empty list.
+
+        Example:
+            To find all documents where age is greater than 25:
+                query = {"breed": "Silver Tabby", "age_upon_outcome_in_weeks" : {"$gt": 50}}
+                results = self.read(query)
+        """
         if data is not None:
             results = self.database.animals.find(data) # data should be a dictionary
             return results
