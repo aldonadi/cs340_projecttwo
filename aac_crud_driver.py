@@ -19,6 +19,7 @@ class AnimalShelter(object):
         #
         # Connection Variables
         #
+
         USER = urllib.parse.quote_plus('aacuser')
         PASS = urllib.parse.quote_plus("i3-bNzTV6OF#V-'a00e+=iKh&JQs")
         HOST = 'nv-desktop-services.apporto.com'
@@ -28,13 +29,8 @@ class AnimalShelter(object):
         # 
         # Initialize Connection
         #
-        self.client = MongoClient('mongodb://%s:%s/%s' % (HOST,PORT,DB))
-        print(f"{self.client.__repr__()}")
-        print(f"{self.client.list_database_names()}")
+        self.client = MongoClient('mongodb://%s:%s@%s:%s/' % (USER,PASS,HOST,PORT))
         self.database = self.client['%s' % (DB)]
-        print("authenticating...")
-        self.database.authenticate(USER, PASS)
-        print("authenticated!")
         self.collection = self.database['%s' % (COL)]
 
     def create(self, data):
