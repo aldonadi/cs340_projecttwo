@@ -48,7 +48,7 @@ class AnimalShelter(object):
         Raises:
             Exception: If the `data` parameter is None or empty
         """
-        if data is not None:
+        if AnimalShelter.is_valid_dict(data):
             result = self.database.animals.insert_one(data)  # data should be dictionary 
             return result.acknowledged
         else:
@@ -82,6 +82,7 @@ class AnimalShelter(object):
 
     @staticmethod
     def is_valid_dict(data):
+        """Returns true if the argument is a valid dict that can be used in MongoDB queries"""
         is_not_nothing = not (data is None)
         is_a_dict      = isinstance(data, dict)
 
