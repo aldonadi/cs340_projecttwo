@@ -14,22 +14,17 @@ and delete animal shelter records using Python.
 
 Using this library is easy.
 
-1\. Download the **aac_crud_driver.py** and edit it with your database
-connection and authentication details, in the **\_\_init\_\_** method:
+1. Download the **aac_crud_driver.py** and edit it with your database
+connection and authentication details, in the **__init__** method:
 
-+-----------------------------------------------------------------------+
-| 23 USER = urllib.parse.quote_plus(\'**username**\')                   |
-|                                                                       |
-| 24 PASS = urllib.parse.quote_plus('**password**')                     |
-|                                                                       |
-| 25 HOST = \'**mongosb.example.com**\'                                 |
-|                                                                       |
-| 26 PORT = **27019**                                                   |
-|                                                                       |
-| 27 DB = \'**AAC**\' \# name of the database                           |
-|                                                                       |
-| 28 COL = \'**animals**\' \# name of the collection                    |
-+-----------------------------------------------------------------------+
+```python
+USER = urllib.parse.quote_plus(username)
+PASS = urllib.parse.quote_plus(password) 
+HOST = 'mongosb.example.com' 
+PORT = 27019
+DB = 'AAC' # name of the database       
+COL = 'animals' # name of the collection
+```
 
 ## Installation
 
@@ -40,36 +35,28 @@ used as the backend MongoDB driver.
 
 ### Code Example
 
-+-----------------------------------------------------------------------+
-| from aac_crud_driver import AnimalShelter                             |
-|                                                                       |
-| \# create the driver object                                           |
-|                                                                       |
-| driver = AnimalShelter()                                              |
-|                                                                       |
-| \# add a new record into the database using regular Python dicts      |
-|                                                                       |
-| driver.create( { "breed": "Wombat", "Name": "Spunky" } )              |
-|                                                                       |
-| \# get a list of matching records                                     |
-|                                                                       |
-| matches = driver.find( { "breed": "Zebra" } )                         |
-+-----------------------------------------------------------------------+
+```python
+from aac_crud_driver import AnimalShelter
+# create the driver object
+driver = AnimalShelter()
 
-> *\
-> *
->
-> **Functions**
->
-> [create(data)]{.underline}: Takes a dictionary object representation
-> of the record to add. It returns True if the insertion succeeded and
-> False if it did not.
->
-> [find(query)]{.underline}: Takes a dictionary object of the to search
-> for. Returns a list of all matching records. Returns an empty list if
-> no matching records were found.
+# add a new record into the database using regular Python dicts
+driver.create( { "breed": "Wombat", "Name": "Spunky" } )
 
-### 
+# get a list of matching records
+matches = driver.find( { "breed": "Zebra" } )
+```
+
+## Functions
+
+* *create(data)*: Takes a dictionary object representation
+of the record to add. It returns True if the insertion succeeded and
+False if it did not.
+
+* *find(query)*: Takes a dictionary object of the to search
+for. Returns a list of all matching records. Returns an empty list if
+no matching records were found.
+
 
 ### Screenshots
 
@@ -84,12 +71,12 @@ out.
 
 ## Roadmap/Features (Optional)
 
--   Implement the **update** and **delete** functions
+- [ ] Implement the **update** and **delete** functions
 
--   Improve the way database connection/authentication details are
-    stored (e.g. a YAML file)
+- [ ] Improve the way database connection/authentication details are
+      stored (e.g. a YAML file)
 
--   Perform validation on the dict data when creating a new record
+- [ ] Perform validation on the dict data when creating a new record
 
 ## Contact
 
