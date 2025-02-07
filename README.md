@@ -31,6 +31,18 @@ COL = 'animals' # name of the collection
 This library requires **Python 3** and the **pymongo** library, which is
 used as the backend MongoDB driver.
 
+1. **Install Python 3.x**
+   * Download and install it from [https://www.python.com/](the Python official website)
+
+2. **Install MongoDB**
+   * Follow MongoDB's [https://www.mongodb.com/docs/manual/installation/](official guide)
+
+3. **Install `pymongo`**
+   * `pip install pymongo` or `apt install python3-pymongo` (or the package manager of your choice)
+
+4. **Clone the repo**
+   * `git clone https://github.com/aldonadi/TODO-UPLOAD-REPO`
+
 ## Usage
 
 ### Code Example
