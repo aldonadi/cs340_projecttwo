@@ -38,7 +38,8 @@ used as the backend MongoDB driver.
    * Follow MongoDB's [https://www.mongodb.com/docs/manual/installation/](official guide)
 
 3. **Install `pymongo`**
-   * `pip install pymongo` or `apt install python3-pymongo` (or the package manager of your choice)
+   * `pip install pymongo` or `apt install python3-pymongo` (or the package manager 
+     of your choice)
 
 4. **Clone the repo**
    * `git clone https://github.com/aldonadi/TODO-UPLOAD-REPO`
@@ -66,9 +67,8 @@ of the record to add. It returns True if the insertion succeeded and
 False if it did not.
 
 * *find(query)*: Takes a dictionary object of the to search
-for. Returns a list of all matching records. Returns an empty list if
-no matching records were found.
-
+for. Returns a list of all matching records. If no records are found,
+returns an empty list.
 
 ### Screenshots
 
