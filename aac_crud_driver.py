@@ -1,5 +1,6 @@
+from bson import is_valid
 from pymongo import MongoClient
-from bson.objectid import ObjectId
+from bson.objectid import ObjectId  
 import urllib.parse
 
 
@@ -68,7 +69,7 @@ class AnimalShelter(object):
                 query = {"breed": "Bat", "age_upon_outcome_in_weeks" : {"$gt": 50}}
                 results = self.find(query)
         """
-        if data is not None:
+        if AnimalShelter.is_valid_dict(data):
             results = []     # if the find fails, results will be an empty list
             try:
                 results = list(self.database.animals.find(data)) # data should be a dict
@@ -78,5 +79,12 @@ class AnimalShelter(object):
 
         else:
             raise Exception("Nothing to find, because data parameter is empty")
+
+    @staticmethod
+    def is_valid_dict(data):
+        is_not_nothing = not (data is None)
+        is_a_dict      = isinstance(data, dict)
+
+        return (is_not_nothing and is_a_dict)
 
 
