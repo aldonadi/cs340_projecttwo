@@ -107,22 +107,34 @@ class AnimalShelter(object):
 
         if not AnimalShelter.is_valid_dict(newdata):
             raise Exception("Nothing to update, because newdata parameter is invalid")
-
-        matching_documents = []
-
-        try:
-            matching_documents = self.find(query)
-        finally:
-            []
-
-        if len(matching_documents) == 0:
-            return 0
-
+        
+        # execute the update operation on the database server
         update_result = self.collection.update_many(query, newdata)
 
+        # report how many documents were actually modified
         return update_result.modified_count
     
+    def delete(self, query):
+        """
+        Deletes all matching animal records.
+
+        Args:
+            query (dict): A dictionary specifying which documents should be deleted.
+
+        Returns:
+            int: The number of records that were deleted.
+
+        Raises:
+            Exception: If the `data` parameter is None or empty
+        """
+
+        if not AnimalShelter.is_valid_dict(query):
+            raise Exception("Nothing to save, because data parameter is empty")
+
+        result = self.database.animals.delete_many(query)  # data should be dictionary 
+        return result.acknowledged
         
+   
 
     @staticmethod
     def is_valid_dict(data):
