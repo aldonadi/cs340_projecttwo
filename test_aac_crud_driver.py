@@ -2,7 +2,11 @@
 
 from aac_crud_driver import AnimalShelter
 
-shelter = AnimalShelter("aacuser", "i3-bNzTV6OF#V-'a00e+=iKh&JQs")
+shelter = AnimalShelter(
+        { "username": "aacuser",
+           "password": "i3-bNzTV6OF#V-'a00e+=iKh&JQs" 
+        }
+    )
 
 ###############################################################################
 print("Inserting a new record...", end='')

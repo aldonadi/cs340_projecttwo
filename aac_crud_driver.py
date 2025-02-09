@@ -2,44 +2,59 @@ from bson import is_valid
 from pymongo import MongoClient
 from bson.objectid import ObjectId  
 import urllib.parse
+import sys
 
-DEFAULT_HOSTNAME   = 'nv-desktop-services.apporto.com'
-DEFAULT_PORT       = 32471
-DEFAULT_DB_NAME         = 'AAC'
+import yaml
+
+CONFIG_FILENAME = 'db.yml'
+
+# some (hopefully) sane defaults
+
+DEFAULT_HOSTNAME = 'localhost'
+DEFAULT_PORT     = 27017
+DEFAULT_USERNAME = 'root'
+DEFAULT_PASSWORD = ''
+
+DEFAULT_DB_NAME  = 'AAC'
 DEFAULT_COLLECTION_NAME = 'animals'
 
 class AnimalShelter(object):
     """ CRUD operations for Animal collection in MongoDB """
 
-    def __init__(
-            self, 
-            username, password, 
-            host=DEFAULT_HOSTNAME, port=DEFAULT_PORT, 
-            db_name=DEFAULT_DB_NAME, collection_name=DEFAULT_COLLECTION_NAME):
-        # Initializing the MongoClient. This helps to 
-        # access the MongoDB databases and collections.
-        # This is hard-wired to use the aac database, the 
-        # animals collection, and the aac user.
-        # Definitions of the connection string variables are
-        # unique to the individual Apporto environment.
-        #
-        # You must edit the connection variables below to reflect
-        # your own instance of MongoDB!
-        #
-        # Connection Variables
-        #
+    def __init__(self, configs = {}):
+        """
+        Sets up configuration options and state for talking to the backend database.
+        
+        You can pass in values for server hostname, password, etc either in a 'db.yml'
+        file or into this constructor; e.g. 
+
+          s = AnimalShelter( { 'hostname': 'srv.example.com', 'username': 'user1' } )
+
+        The precedence of config options, from highest to lowest, are:
+
+           1. options passed into the constructor
+           2. Options read from 'db.yml'
+           3. Default value
+        """
+
+        # load default and file (db.yml) config settings
+        self.load_configs()
+
+        # overwrite any config settings given as argument
+        self.config.update(configs)
 
         # Per MongoDB doc, credentials need to be URL-escaped
-        escaped_username = urllib.parse.quote_plus(username)
-        escaped_password = urllib.parse.quote_plus(password)
+        escaped_username = urllib.parse.quote_plus(self.config['username'])
+        escaped_password = urllib.parse.quote_plus(self.config['password'])
 
         # Initialize Connection
-        self.client = MongoClient('mongodb://%s:%s@%s:%s/' % (escaped_username, escaped_password,
-                                                              host, port)
-                                 )
+        self.client = MongoClient(
+                'mongodb://%s:%s@%s:%s/' % (escaped_username, escaped_password,
+                                            self.config['hostname'], self.config['port'])
+            )
 
-        self.database = self.client['%s' % (db_name)]
-        self.collection = self.database['%s' % (collection_name)]
+        self.database = self.client['%s' % (self.config['db_name'])]
+        self.collection = self.database['%s' % (self.config['collection_name'])]
 
     def create(self, data):
         """
@@ -144,6 +159,32 @@ class AnimalShelter(object):
         result = self.database.animals.delete_many(query)  # data should be dictionary 
         return result.acknowledged
         
+
+    def load_configs(self):
+        """ Loads config settings from either a yaml file or defaults. """
+
+        # first, load all the default, built-in config values
+        self.config = {
+            "hostname": DEFAULT_HOSTNAME,
+            "port":     DEFAULT_PORT,
+            "username": DEFAULT_USERNAME,
+            "password": DEFAULT_PASSWORD,
+            "db_name":  DEFAULT_DB_NAME,
+            "collection_name": DEFAULT_COLLECTION_NAME
+        }
+
+        configs_from_file = {}
+
+        # try to read configs from a YAML config file
+        try:
+            with open(CONFIG_FILENAME) as config_file:
+                configs_from_file = yaml.safe_load(config_file)
+        except FileNotFoundError:
+            print("Config file '{CONFIG_FILENAME}' not found; using built-in default settings.",
+                  file=sys.stderr)
+
+        # override defaults with any settings from the config file
+        self.config.update(configs_from_file)
    
 
     @staticmethod
@@ -153,5 +194,4 @@ class AnimalShelter(object):
         is_a_dict      = isinstance(data, dict)
 
         return (is_not_nothing and is_a_dict)
-
 
