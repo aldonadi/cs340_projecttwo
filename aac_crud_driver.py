@@ -81,7 +81,7 @@ class AnimalShelter(object):
             raise Exception("Nothing to find, because data parameter is empty")
     
 
-        def update(self, query, newdata):
+    def update(self, query, newdata):
         """
         Updates all existing animal documents that match a query filter.
 
@@ -113,7 +113,7 @@ class AnimalShelter(object):
         try:
             matching_documents = self.find(query)
         finally:
-            ;
+            []
 
         if len(matching_documents) == 0:
             return 0
