@@ -118,6 +118,12 @@ class AnimalShelter(object):
         if len(matching_documents) == 0:
             return 0
 
+        update_result = self.collection.update_many(query, newdata)
+
+        return update_result.modified_count
+    
+        
+
     @staticmethod
     def is_valid_dict(data):
         """Returns true if the argument is a valid dict that can be used in MongoDB queries"""
