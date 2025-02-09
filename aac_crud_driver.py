@@ -108,8 +108,11 @@ class AnimalShelter(object):
         if not AnimalShelter.is_valid_dict(newdata):
             raise Exception("Nothing to update, because newdata parameter is invalid")
         
+        # package the new data into a '$set' operation 
+        data_update_dict = { "$set": newdata }
+
         # execute the update operation on the database server
-        update_result = self.collection.update_many(query, newdata)
+        update_result = self.collection.update_many(query, data_update_dict)
 
         # report how many documents were actually modified
         return update_result.modified_count
