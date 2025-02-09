@@ -8,9 +8,6 @@ DEFAULT_PORT       = 32471
 DEFAULT_DB_NAME         = 'AAC'
 DEFAULT_COLLECTION_NAME = 'animals'
 
-#TODO: DELETE THESE CREDS!!!
-# aacuser i3-bNzTV6OF#V-'a00e+=iKh&JQs
-
 class AnimalShelter(object):
     """ CRUD operations for Animal collection in MongoDB """
 
