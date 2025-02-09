@@ -79,6 +79,44 @@ class AnimalShelter(object):
 
         else:
             raise Exception("Nothing to find, because data parameter is empty")
+    
+
+        def update(self, query, newdata):
+        """
+        Updates all existing animal documents that match a query filter.
+
+        Args:
+          query (dict):   A dictionary specifying the query criteria to filter documents.
+          newdata (dict): A dictionary containing the new fields and values to save to
+                            all matching documents.
+
+        Returns:
+            int: the number of documents that were modified
+
+        Raises:
+            Exception if the query or newdata args are not valid dicts
+
+        Example:
+            To change the name of a certain breed for all records:
+                boring_name =  { "breed": "Bat" }
+                awesome_name = { "breed": "Chiroptera" }
+                num_modified = shelter.update(boring_name, awesome_name)
+        """
+        if not AnimalShelter.is_valid_dict(query):
+            raise Exception("Nothing to update, because query parameter is invalid")
+
+        if not AnimalShelter.is_valid_dict(newdata):
+            raise Exception("Nothing to update, because newdata parameter is invalid")
+
+        matching_documents = []
+
+        try:
+            matching_documents = self.find(query)
+        finally:
+            ;
+
+        if len(matching_documents) == 0:
+            return 0
 
     @staticmethod
     def is_valid_dict(data):
