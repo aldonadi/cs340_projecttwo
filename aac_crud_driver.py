@@ -3,11 +3,22 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId  
 import urllib.parse
 
+DEFAULT_HOSTNAME   = 'nv-desktop-services.apporto.com'
+DEFAULT_PORT       = 32471
+DEFAULT_DB_NAME         = 'AAC'
+DEFAULT_COLLECTION_NAME = 'animals'
+
+#TODO: DELETE THESE CREDS!!!
+# aacuser i3-bNzTV6OF#V-'a00e+=iKh&JQs
 
 class AnimalShelter(object):
     """ CRUD operations for Animal collection in MongoDB """
 
-    def __init__(self):
+    def __init__(
+            self, 
+            username, password, 
+            host=DEFAULT_HOSTNAME, port=DEFAULT_PORT, 
+            db_name=DEFAULT_DB_NAME, collection_name=DEFAULT_COLLECTION_NAME):
         # Initializing the MongoClient. This helps to 
         # access the MongoDB databases and collections.
         # This is hard-wired to use the aac database, the 
@@ -21,18 +32,17 @@ class AnimalShelter(object):
         # Connection Variables
         #
 
-        USER = urllib.parse.quote_plus('aacuser')
-        PASS = urllib.parse.quote_plus("i3-bNzTV6OF#V-'a00e+=iKh&JQs")
-        HOST = 'nv-desktop-services.apporto.com'
-        PORT = 32471
-        DB = 'AAC'   # TODO: change this to 'AAC' for production
-        COL = 'animals'
-        # 
+        # Per MongoDB doc, credentials need to be URL-escaped
+        escaped_username = urllib.parse.quote_plus(username)
+        escaped_password = urllib.parse.quote_plus(password)
+
         # Initialize Connection
-        #
-        self.client = MongoClient('mongodb://%s:%s@%s:%s/' % (USER,PASS,HOST,PORT))
-        self.database = self.client['%s' % (DB)]
-        self.collection = self.database['%s' % (COL)]
+        self.client = MongoClient('mongodb://%s:%s@%s:%s/' % (escaped_username, escaped_password,
+                                                              host, port)
+                                 )
+
+        self.database = self.client['%s' % (db_name)]
+        self.collection = self.database['%s' % (collection_name)]
 
     def create(self, data):
         """
