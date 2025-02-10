@@ -14,17 +14,18 @@ and delete animal shelter records using Python.
 
 Using this library is easy.
 
-1. Download the **aac_crud_driver.py** and edit it with your database
-connection and authentication details, in the **__init__** method:
+1. Download the `aac_crud_driver.py`.
 
-```python
-USER = urllib.parse.quote_plus(username)
-PASS = urllib.parse.quote_plus(password) 
-HOST = 'mongosb.example.com' 
-PORT = 27019
-DB = 'AAC' # name of the database       
-COL = 'animals' # name of the collection
-```
+2. Import the module and create an `AnimalShelter` object with server 
+   config details:
+
+    ```python
+    from aac_crud_driver import AnimalShelter
+
+    shelter = AnimalShelter( { "username": "aacuser", "password": "123456" } )
+
+    lucy = shelter.find( { "name": "Lucy", "breed": "Dog" } )
+    ```
 
 ## Installation
 
@@ -45,6 +46,45 @@ used as the backend MongoDB driver.
    * `git clone https://github.com/aldonadi/TODO-UPLOAD-REPO`
 
 ## Usage
+
+### Server Connection and Authentication
+
+The main Python file `aac_crud_driver.py` contains some (hopefully) reasonable default
+values for MongoDB server hostname, port, username, etc. It assumes a locally-hosted 
+MongoDB at the default port. To configure this, along with credentials, you have two 
+options: you can specify them in a dict you pass to the constructor, or put them in a
+`db.yml` file that is in the same directory as `aac_crud_driver.py`. 
+
+#### Specifying in the constructor
+
+```python
+shelter = AnimalShelter( 
+    { 
+        "hostname": "db.example.com", 
+        "port":     12345,
+        "username": "user1",
+        "password": "very-insecure1",
+        "db_name":  "main-street-shelter",
+        "collection_name": "animal_records"
+    }
+```
+
+#### Specifying in `db.yml`
+
+In `db.yml`:
+```yml
+hostname: "db.example.com" 
+port:     1234
+username: "user1"
+password: "very-insecure1"
+db_name:  "main-street-shelter"
+collection_name: "animal_records"
+```
+
+In your Python script:
+```python
+shelter = AnimalShelter()
+```
 
 ### Code Example
 
