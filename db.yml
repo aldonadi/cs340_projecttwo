@@ -2,13 +2,13 @@
 hostname: nv-desktop-services.apporto.com
 port: 32471
 
+# Credentials
+username: aacuser
+password: i3-bNzTV6OF#V-'a00e+=iKh&JQs
+
 # Name of the shelter database
 db_name: AAC
 
 # Name of the document containing shelter documents
 collection_name: animals
-
-# Credentials
-username: aacuser
-password: i3-bNzTV6OF#V-'a00e+=iKh&JQs
 
