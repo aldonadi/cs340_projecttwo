@@ -103,12 +103,21 @@ matches = driver.find( { "breed": "Zebra" } )
 ## Functions
 
 * *create(data)*: Takes a dictionary object representation
-of the record to add. It returns True if the insertion succeeded and
-False if it did not.
+  of the record to add. It returns True if the insertion succeeded and
+  False if it did not.
 
-* *find(query)*: Takes a dictionary object of the to search
-for. Returns a list of all matching records. If no records are found,
-returns an empty list.
+* *find(query)*: Takes a dictionary object representing search criteria.
+  Returns a list of all matching records. If no records are found,
+  returns an empty list.
+
+* *update(query, newdata)*: Updated all documents that match the `query`
+  dictionary with the fields and values in the `newdata` dict. Returns
+  the number of documents that were updated. Raises an exception if
+  either `query` or `newdata` are not dicts.
+
+* *delete(query)*: Deletes all documents that match the `query`
+  dictionary. Returns the number of documents that were deleted. Raises
+  an exception if `query` is not a dict.
 
 ### Screenshots
 
@@ -121,11 +130,15 @@ get right so far. Credentials need to be url-escaped (which is now
 handled in the driver code); this was not an easy requirement to figure
 out.
 
+Refactoring the database connection and authentication config away from
+the source code and into a YAML file took a bit of work, especially
+getting a nice order-of-precedence.
+
 ## Roadmap/Features (Optional)
 
-- [ ] Implement the **update** and **delete** functions
+- [X] Implement the **update** and **delete** functions
 
-- [ ] Improve the way database connection/authentication details are
+- [X] Improve the way database connection/authentication details are
       stored (e.g. a YAML file)
 
 - [ ] Perform validation on the dict data when creating a new record
