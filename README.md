@@ -119,8 +119,43 @@ matches = driver.find( { "breed": "Zebra" } )
   dictionary. Returns the number of documents that were deleted. Raises
   an exception if `query` is not a dict.
 
+### Testing
+
+To test the functionality, use the following:
+
+```python
+# Test inserting a valid record
+assert driver.create({"breed": "Dog", "name": "Buddy"}) == True
+
+# Test inserting an invalid record (should return False)
+assert driver.create(None) == False
+
+# Test reading a record that exists
+assert len(driver.find({"breed": "Dog"})) > 0
+
+# Test reading a record that doesn't exist (should return empty list)
+assert driver.find({"breed": "Dragon"}) == []
+
+# Test updating a record
+assert driver.update( { "breed": "Dog", "name": "Buddy"},    # query dict
+                      { "name": "Bud" }                      # dict with into to update
+                    ) == 1
+
+# Test deleting a record
+assert driver.find( { "objectId": "67a56b32ec2435f6e169c472" }) == 1   # verify it exists
+assert driver.delete( { "objectId": "67a56b32ec2435f6e169c472" }) == 1 # delete it
+assert driver.find( { "objectId": "67a56b32ec2435f6e169c472" }) == 0   # verify it is gone
+```
+
 ### Screenshots
 
+**MongoDB Import Execution**:
+![](media/image1.png){width="6.5in" height="3.245138888888889in"}
+
+**User Authentication Execution**:
+![](media/image1.png){width="6.5in" height="3.245138888888889in"}
+
+**CRUD Functionality Test Execution**:
 ![](media/image1.png){width="6.5in" height="3.245138888888889in"}
 
 ## Challenges
