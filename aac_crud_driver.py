@@ -132,7 +132,9 @@ class AnimalShelter(object):
                             all matching documents.
 
         Returns:
-            int: the number of documents that were modified
+            dict in form of { "success": True/False (was at least 1 document modified?),
+                              "modified_count": number of documents that were modified
+                            }
 
         Raises:
             Exception if the query or newdata args are not valid dicts
@@ -155,8 +157,12 @@ class AnimalShelter(object):
         # execute the update operation on the database server
         update_result = self.collection.update_many(query, data_update_dict)
 
-        # report how many documents were actually modified
-        return update_result.modified_count
+        # report success True/False and how many documents were actually modified
+        stats = {
+                    "success": update_result.modified_count > 0,
+                    "modified_count": update_result.modified_count
+                }
+        return stats
     
     def delete(self, query):
         """

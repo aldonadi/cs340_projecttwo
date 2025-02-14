@@ -60,12 +60,12 @@ else:
 print("Naming the wombat...",end='')
 new_name = { "name": "Reginald Fluffinstocker III" }
 
-num_named = shelter.update(the_wombat, new_name)
+stats = shelter.update(the_wombat, new_name)
 
-if num_named == 0:
+if not stats['success']:
     print("FAILED.    none renamed!")
-elif num_named > 1:
-    print(f"FAILED.   {num_named} named!")
+elif stats['modified_count'] > 1:
+    print(f"FAILED.   {stats['modified_count']} named!")
 else:
     print("PASSED.")
 
