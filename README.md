@@ -106,14 +106,21 @@ matches = driver.find( { "breed": "Zebra" } )
   of the record to add. It returns True if the insertion succeeded and
   False if it did not.
 
-* *find(query)*: Takes a dictionary object representing search criteria.
-  Returns a list of all matching records. If no records are found,
-  returns an empty list.
+* *find(query [, include_id=False])*: Takes a dictionary object representing
+  search criteria. Returns a list of all matching records. If no records are found,
+  returns an empty list. By default, the Mongo ObjectId of matching records is not
+  included. Set `include_id` to `True` to include ObjectId in returned results.
 
 * *update(query, newdata)*: Updated all documents that match the `query`
   dictionary with the fields and values in the `newdata` dict. Returns
-  the number of documents that were updated. Raises an exception if
-  either `query` or `newdata` are not dicts.
+  a dict in the form
+  
+      { 
+        "success": bool,          # True if at least 1 document was modified
+        "modified_count": int     # Number of documents that were modified
+      }
+
+  Raises an exception if either `query` or `newdata` are not dicts.
 
 * *delete(query)*: Deletes all documents that match the `query`
   dictionary. Returns the number of documents that were deleted. Raises
