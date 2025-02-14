@@ -108,7 +108,8 @@ matches = driver.find( { "breed": "Zebra" } )
 
   **Example:**
   ```python
-  shelter.create( { "breed": "Wombat", "name": "Huggles", "age": 5 } )
+  if shelter.create( { "breed": "Wombat", "name": "Huggles", "age": 5 } ):
+    print("A new wombat has joined our shelter")
   ```
 
 * *find(query [, include_id=False])*: Takes a dictionary object representing
@@ -184,7 +185,7 @@ assert driver.update( { "breed": "Dog", "name": "Buddy"},    # query dict
 
 # Test deleting a record
 assert len(driver.find( { "objectId": "67a56b32ec2435f6e169c472" })) == 1     # verify it exists
-assert driver.delete( { "objectId": "67a56b32ec2435f6e169c472" })['success']  # delete it
+assert driver.delete(   { "objectId": "67a56b32ec2435f6e169c472" })['success']  # delete it
 assert len(driver.find( { "objectId": "67a56b32ec2435f6e169c472" })) == 0     # verify it is gone
 ```
 
@@ -218,6 +219,10 @@ getting a nice order-of-precedence.
       stored (e.g. a YAML file)
 
 - [ ] Perform validation on the dict data when creating a new record
+
+- [X] Update API for better return values from update and delete
+
+- [X] Hide ObjectID from found documents by default
 
 ## Contact
 

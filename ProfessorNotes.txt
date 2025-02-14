@@ -5,4 +5,4 @@ Areas for Improvement (Minor Enhancements):
 - [X] Currently, update() and delete() return raw MongoDB metadata, which includes unnecessary fields.
       Instead, return structured responses with meaningful success indicators.
 
-- [ ] While the README explains CRUD operations well, adding sample function calls would improve clarity.
+- [X] While the README explains CRUD operations well, adding sample function calls would improve clarity.
