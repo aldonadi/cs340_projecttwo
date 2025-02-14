@@ -76,7 +76,7 @@ class AnimalShelter(object):
         else:
             raise Exception("Nothing to save, because data parameter is empty")
 
-    def find(self, data, include_id=False):
+    def find(self, query, include_id=False):
         """
         Retrieves animal records based on an optional query filter.
 
@@ -88,31 +88,38 @@ class AnimalShelter(object):
         Returns:
             list: A list of documents that match the query. If no documents are found, returns an empty list.
 
+        Raises:
+            Exception: If the `data` parameter is None or empty
+
         Example:
             To find all documents where age is greater than 25:
                 query = {"breed": "Bat", "age_upon_outcome_in_weeks" : {"$gt": 50}}
                 results = self.find(query)
+
+            To find the wombat 'Huggles', including the ObjectID in the results:
+                query = {"breed": "wombat", "name": "Huggles"}
+                results = self.find(query=query, include_id=True)
         """
-        if AnimalShelter.is_valid_dict(data):
+        if AnimalShelter.is_valid_dict(query):
             results = []     # if the find fails, results will be an empty list
 
-            # do not return the _id field unless specifically desired
-            
-
             try:
-                if not include_id:    # default: don't include the ObjectID
+                # get records, hiding the '_id' field (default)
+                if not include_id:
                     # define a projection to hide the '_id' field
                     projection = { "_id": False }
                     # find mathing records and apply the projection 
-                    results = list(self.database.animals.find(data, projection)) # data should be a dict
-                else:  # including the '_id' field
-                    results = list(self.database.animals.find(data)) # data should be a dict
+                    results = list(self.database.animals.find(query, projection))
+
+                # get matching records, including the '_id' field
+                else:
+                    results = list(self.database.animals.find(query)) 
             
             finally:
                 return results
 
         else:
-            raise Exception("Nothing to find, because data parameter is empty")
+            raise Exception("Nothing to find, because query parameter is empty")
     
 
     def update(self, query, newdata):
