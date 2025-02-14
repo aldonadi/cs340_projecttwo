@@ -22,7 +22,9 @@ Using this library is easy.
     ```python
     from aac_crud_driver import AnimalShelter
 
-    shelter = AnimalShelter( { "username": "aacuser", "password": "123456" } )
+    config_dict = { "username": "aacuser", "password": "123456" }
+
+    shelter = AnimalShelter(config_dict)
 
     lucy = shelter.find( { "name": "Lucy", "breed": "Dog" } )
     ```
@@ -49,13 +51,14 @@ used as the backend MongoDB driver.
 
 ### Server Connection and Authentication
 
-The main Python file `aac_crud_driver.py` contains some (hopefully) reasonable default
-values for MongoDB server hostname, port, username, etc. It assumes a locally-hosted 
-MongoDB at the default port. To configure this, along with credentials, you have two 
-options: you can specify them in a dict you pass to the constructor, or put them in a
-`db.yml` file that is in the same directory as `aac_crud_driver.py`. 
+The main Python file `aac_crud_driver.py` contains some (hopefully) reasonable 
+default values for MongoDB server hostname, port, username, etc. It assumes a 
+locally-hosted MongoDB at the default port. To reconfigure this and supply your
+own credentials, there are two options: you can specify them in a dict you pass
+to the constructor, or put them in a `db.yml` file that is in the same directory
+as `aac_crud_driver.py`.
 
-#### Specifying in the constructor
+#### Option 1: Specifying in the constructor
 
 ```python
 shelter = AnimalShelter( 
@@ -66,10 +69,10 @@ shelter = AnimalShelter(
         "password": "very-insecure1",
         "db_name":  "main-street-shelter",
         "collection_name": "animal_records"
-    }
+    } )
 ```
 
-#### Specifying in `db.yml`
+#### Option 2: Specifying in `db.yml`
 
 In `db.yml`:
 ```yml
@@ -128,17 +131,19 @@ matches = driver.find( { "breed": "Zebra" } )
   dictionary with the fields and values in the `newdata` dict. Returns
   a dict in the form
   
-      { 
-        "success": bool,          # True if at least 1 document was modified
-        "modified_count": int     # Number of documents that were modified
-      }
+  ```python
+  { 
+      "success": bool,      # True if at least 1 document was modified
+      "modified_count": int # Number of documents that were modified
+  }
+  ```
 
   Raises an exception if either `query` or `newdata` are not dicts.
 
   **Example:**
   ```python
   birthday_boy = { "breed": "Wombat", "name": "Huggles", "age": 5 }
-  new_age = { "age": 6" }
+  new_age = { "age": 6 }
 
   if shelter.update(birthday_boy, new_age)['success']:
       print("Happy birthday!")
@@ -147,10 +152,12 @@ matches = driver.find( { "breed": "Zebra" } )
 * *delete(query)*: Deletes all documents that match the `query`
   dictionary. Returns a dict in the form: 
 
-      { 
-        "success": bool,          # True if at least 1 document was deleted 
-        "deleted_count": int      # Number of documents that were deleted
-      }
+  ```python
+  { 
+    "success": bool,     # True if at least 1 document was deleted 
+    "deleted_count": int # Number of documents that were deleted
+  }
+  ```
 
   Raises an exception if `query` is not a dict.
 
