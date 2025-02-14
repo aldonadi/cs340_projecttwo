@@ -106,10 +106,22 @@ matches = driver.find( { "breed": "Zebra" } )
   of the record to add. It returns True if the insertion succeeded and
   False if it did not.
 
+  **Example:**
+  ```python
+  shelter.create( { "breed": "Wombat", "name": "Huggles", "age": 5 } )
+  ```
+
 * *find(query [, include_id=False])*: Takes a dictionary object representing
   search criteria. Returns a list of all matching records. If no records are found,
   returns an empty list. By default, the Mongo ObjectId of matching records is not
   included. Set `include_id` to `True` to include ObjectId in returned results.
+
+  **Example:**
+  ```python
+  shelter.find(
+    query = { "breed": "Wombat", "name": "Huggles", "age": 5 },
+    include_id = True)
+  ```
 
 * *update(query, newdata)*: Updated all documents that match the `query`
   dictionary with the fields and values in the `newdata` dict. Returns
@@ -122,6 +134,15 @@ matches = driver.find( { "breed": "Zebra" } )
 
   Raises an exception if either `query` or `newdata` are not dicts.
 
+  **Example:**
+  ```python
+  birthday_boy = { "breed": "Wombat", "name": "Huggles", "age": 5 }
+  new_age = { "age": 6" }
+
+  if shelter.update(birthday_boy, new_age)['success']:
+      print("Happy birthday!")
+  ```
+
 * *delete(query)*: Deletes all documents that match the `query`
   dictionary. Returns a dict in the form: 
 
@@ -132,6 +153,13 @@ matches = driver.find( { "breed": "Zebra" } )
 
   Raises an exception if `query` is not a dict.
 
+  **Example:**
+  ```python
+  adopted_wombat = { "breed": "Wombat", "name": "Huggles", "age": 6 }
+
+  if shelter.delete(adopted_wombat)['success']:
+      print("Another happy family!")
+  ```
 ### Testing
 
 To test the functionality, use the following:
