@@ -74,7 +74,9 @@ else:
 print("Secretly euthanizing poor Reginald Fluffinstocker the Third...",end='')
 reginald = the_wombat
 
-num_deleted = shelter.delete(reginald)
+result = shelter.delete(reginald)
+
+num_deleted = result['deleted_count']
 
 if num_deleted == 0:
     print("FAILED.    none deleted!")

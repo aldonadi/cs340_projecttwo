@@ -123,8 +123,14 @@ matches = driver.find( { "breed": "Zebra" } )
   Raises an exception if either `query` or `newdata` are not dicts.
 
 * *delete(query)*: Deletes all documents that match the `query`
-  dictionary. Returns the number of documents that were deleted. Raises
-  an exception if `query` is not a dict.
+  dictionary. Returns a dict in the form: 
+
+      { 
+        "success": bool,          # True if at least 1 document was deleted 
+        "deleted_count": int      # Number of documents that were deleted
+      }
+
+  Raises an exception if `query` is not a dict.
 
 ### Testing
 
@@ -146,12 +152,12 @@ assert driver.find({"breed": "Dragon"}) == []
 # Test updating a record
 assert driver.update( { "breed": "Dog", "name": "Buddy"},    # query dict
                       { "name": "Bud" }                      # dict with into to update
-                    ) == 1
+                    )['success']   # will be True if at least 1 document was updated
 
 # Test deleting a record
-assert driver.find( { "objectId": "67a56b32ec2435f6e169c472" }) == 1   # verify it exists
-assert driver.delete( { "objectId": "67a56b32ec2435f6e169c472" }) == 1 # delete it
-assert driver.find( { "objectId": "67a56b32ec2435f6e169c472" }) == 0   # verify it is gone
+assert len(driver.find( { "objectId": "67a56b32ec2435f6e169c472" })) == 1     # verify it exists
+assert driver.delete( { "objectId": "67a56b32ec2435f6e169c472" })['success']  # delete it
+assert len(driver.find( { "objectId": "67a56b32ec2435f6e169c472" })) == 0     # verify it is gone
 ```
 
 ### Screenshots

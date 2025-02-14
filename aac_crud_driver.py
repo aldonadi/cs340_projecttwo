@@ -172,7 +172,9 @@ class AnimalShelter(object):
             query (dict): A dictionary specifying which documents should be deleted.
 
         Returns:
-            int: The number of records that were deleted.
+            dict in form of { "success": True/False (was at least 1 document modified?),
+                              "modified_count": number of documents that were modified
+                            }
 
         Raises:
             Exception: If the `data` parameter is None or empty
@@ -181,8 +183,14 @@ class AnimalShelter(object):
         if not AnimalShelter.is_valid_dict(query):
             raise Exception("Nothing to save, because data parameter is empty")
 
-        result = self.database.animals.delete_many(query)  # data should be dictionary 
-        return result.acknowledged
+        delete_result = self.database.animals.delete_many(query)   
+        
+        stats = {
+                    "success": delete_result.deleted_count > 0,
+                    "deleted_count": delete_result.deleted_count
+                }
+
+        return stats
         
 
     def load_configs(self):
