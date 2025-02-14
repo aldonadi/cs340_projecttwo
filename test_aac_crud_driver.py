@@ -24,7 +24,7 @@ else:
         print("FAILED.")
 
 ###############################################################################
-print("Searching for the wombat...", end='')
+print("Searching for the wombat (no ID)...", end='')
 
 existing_wombats = shelter.find(the_wombat)
 
@@ -36,6 +36,25 @@ elif num_wombats_found > 1:
     print(f"FAILED.   {len(existing_wombats)} found!")
 else:
     print("PASSED.")
+    print("  Here is the wombat we found:")
+    print(f"    {existing_wombats}")
+
+
+###############################################################################
+print("Searching for the wombat (with ID)...", end='')
+
+existing_wombats = shelter.find(the_wombat, True)   # 'True' includes the ObjectID
+
+num_wombats_found = len(existing_wombats)
+
+if num_wombats_found == 0:
+    print("FAILED.    none found!")
+elif num_wombats_found > 1:
+    print(f"FAILED.   {len(existing_wombats)} found!")
+else:
+    print("PASSED.")
+    print("  Here is the wombat we found:")
+    print(f"    {existing_wombats}")
 
 ###############################################################################
 print("Naming the wombat...",end='')

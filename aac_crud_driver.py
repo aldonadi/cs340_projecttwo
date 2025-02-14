@@ -76,12 +76,14 @@ class AnimalShelter(object):
         else:
             raise Exception("Nothing to save, because data parameter is empty")
 
-    def find(self, data):
+    def find(self, data, include_id=False):
         """
         Retrieves animal records based on an optional query filter.
 
         Args:
             query (dict): A dictionary specifying the query criteria to filter documents.
+            include_id:   A bool specifying whether the object's MongoDB ObjectID should be
+                          returned as well; default is False.
 
         Returns:
             list: A list of documents that match the query. If no documents are found, returns an empty list.
@@ -93,8 +95,18 @@ class AnimalShelter(object):
         """
         if AnimalShelter.is_valid_dict(data):
             results = []     # if the find fails, results will be an empty list
+
+            # do not return the _id field unless specifically desired
+            
+
             try:
-                results = list(self.database.animals.find(data)) # data should be a dict
+                if not include_id:    # default: don't include the ObjectID
+                    # define a projection to hide the '_id' field
+                    projection = { "_id": False }
+                    # find mathing records and apply the projection 
+                    results = list(self.database.animals.find(data, projection)) # data should be a dict
+                else:  # including the '_id' field
+                    results = list(self.database.animals.find(data)) # data should be a dict
             
             finally:
                 return results
