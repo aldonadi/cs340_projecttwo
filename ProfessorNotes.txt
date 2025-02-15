@@ -1,8 +1,0 @@
-Areas for Improvement (Minor Enhancements):
-- [X] Currently, find() returns MongoDB’s _id field, which is not always needed by users. 
-      To improve usability, exclude _id unless explicitly requested.
-
-- [X] Currently, update() and delete() return raw MongoDB metadata, which includes unnecessary fields.
-      Instead, return structured responses with meaningful success indicators.
-
-- [X] While the README explains CRUD operations well, adding sample function calls would improve clarity.
