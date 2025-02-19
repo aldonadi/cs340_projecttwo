@@ -30,7 +30,7 @@ db = AnimalShelter()
 
 # class read method must support return of list object and accept projection json input
 # sending the read method an empty document requests all documents be returned
-df = pd.DataFrame.from_records(db.read({}))
+df = pd.DataFrame.from_records(db.find({}))
 
 # MongoDB v5+ is going to return the '_id' column and that is going to have an 
 # invlaid object type of 'ObjectID' - which will cause the data_table to crash - so we remove
@@ -86,7 +86,7 @@ app.layout = html.Div([
              ])
 def on_click(button1, button2):
     # start case
-    df = pd.DataFrame.from_records(db.read({}))
+    df = pd.DataFrame.from_records(db.find({}))
     
     # use higher number of button clicks to determine filter type, can you think of a better way? ...
     if (int(button1) > int(button2)):
