@@ -54,6 +54,8 @@ app.layout = html.Div([
     html.Div(id='hidden-div', style={'display':'none'}),
     html.Center(html.B(html.H1('SNHU CS-340 Dashboard'))),
     html.Hr(),
+    html.Div(className='buttonRow', children=[html.P("quick filters")]),
+
     dash_table.DataTable(
         id='datatable-id',
         columns=[
