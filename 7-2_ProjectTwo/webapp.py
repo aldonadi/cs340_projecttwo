@@ -22,17 +22,10 @@ from aac_crud_driver import AnimalShelter
 ###########################
 # Data Manipulation / Model
 ###########################
-# FIX ME update with your username and password and CRUD Python module name
 
-username = "aacuser"
-password = "SNHU1234"
-host = "127.0.0.1"
-port = 27017
-database = "aac"
-collection = "animals"
+# server configuration and credentials are managed in the `db.yml` file
 
-#db = AnimalShelter(username, password)
-db = AnimalShelter(username, password, host, port, database, collection)
+db = AnimalShelter()
 
 
 # class read method must support return of list object and accept projection json input
