@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 
 #### FIX ME #####
 # change animal_shelter and AnimalShelter to match your CRUD Python module file name and class name
-from CRUDMongoModule_Module6 import CRUDMongo
+from aac_crud_driver import AnimalShelter
 
 ###########################
 # Data Manipulation / Model
@@ -32,7 +32,7 @@ database = "aac"
 collection = "animals"
 
 #db = AnimalShelter(username, password)
-db = CRUDMongo(username, password, host, port, database, collection)
+db = AnimalShelter(username, password, host, port, database, collection)
 
 
 # class read method must support return of list object and accept projection json input
