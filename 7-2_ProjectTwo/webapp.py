@@ -21,9 +21,6 @@ import time
 # change animal_shelter and AnimalShelter to match your CRUD Python module file name and class name
 from aac_crud_driver import AnimalShelter
 
-# import the webapp stylesheets
-import webapp_styles
-
 
 ###########################
 # Data Manipulation / Model
