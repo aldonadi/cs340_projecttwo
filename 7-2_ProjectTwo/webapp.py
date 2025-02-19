@@ -21,6 +21,9 @@ import time
 # change animal_shelter and AnimalShelter to match your CRUD Python module file name and class name
 from aac_crud_driver import AnimalShelter
 
+# import the webapp stylesheets
+import webapp_styles
+
 
 ###########################
 # Data Manipulation / Model
@@ -54,8 +57,9 @@ app.layout = html.Div([
     html.Div(id='hidden-div', style={'display':'none'}),
     html.Center(html.B(html.H1('SNHU CS-340 Dashboard'))),
     html.Hr(),
-    html.Div(className='buttonRow', children=[html.P("quick filters")]),
-
+    html.Div(className='buttonRow', children=[
+        html.P("quick filters")
+        ]),
     dash_table.DataTable(
         id='datatable-id',
         columns=[
