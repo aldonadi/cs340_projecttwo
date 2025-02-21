@@ -1,5 +1,9 @@
 """ Class for loading and parsing Quick Filter Button YAML data"""
 
+import yaml
+
+DEFAULT_QUICK_FILTER_BUTTON_YAML_FILENAME="quick-filter-buttons.yml"
+
 class QuickFilterButton:
     def __init__(self, button_text, breeds, sex, min_age_in_weeks, max_age_in_weeks):
         self.button_text = button_text
@@ -38,4 +42,34 @@ class QuickFilterButton:
         return bool(dict)      # empty dicts evaluate to False
 
 class QuickFilterButtons:
+
+    @staticmethod
+    def load(buttons_yaml_file: str):
+        # load default filename if not specified in argument
+        if buttons_yaml_file == "":
+            buttons_yaml_file = DEFAULT_QUICK_FILTER_BUTTON_YAML_FILENAME
+
+        # try to load the quick filters YAML file into a YAML object
+        try:
+            with open(buttons_yaml_file, 'r') as file:
+                data = yaml.safe_load(file)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Quick filter button YAML file '{buttons_yaml_file}' not found")
+
+        buttons = []
+        for entry in data:
+            button_text = entry.__name__
+            breeds = entry.get('breeds')
+            sex = entry.get('sex')
+            min_age_in_weeks = entry.get("min-age-in-weeks")
+            max_age_in_weeks = entry.get("max-age-in-weeks")
+
+            button = QuickFilterButton(button_text, breeds, sex, min_age_in_weeks, max_age_in_weeks)
+            buttons.append(button)
+
+
+
+
+
+
 
