@@ -28,7 +28,7 @@ class QuickFilter:
             age_range["$gte"] = self.min_age_in_weeks
 
         if self.max_age_in_weeks:
-            age_range["$tle"] = self.max_age_in_weeks
+            age_range["$lte"] = self.max_age_in_weeks
 
         if not QuickFilter.is_dict_empty(age_range):
             query["age_upon_outcome_in_weeks"] = age_range
@@ -38,8 +38,8 @@ class QuickFilter:
 
 
     @staticmethod
-    def is_dict_empty(dict):
-        return bool(dict)      # empty dicts evaluate to False
+    def is_dict_empty(dictionary):
+        return not bool(dictionary)      # empty dicts evaluate to False
 
 class QuickFilters:
 

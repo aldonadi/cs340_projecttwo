@@ -16,4 +16,5 @@ shelter = AnimalShelter()
 matches = shelter.find(filters[0].query_json())
 
 print(f"got {len(matches)} matches")
-pprint.pprint(matches)
+print("First match:")
+pprint.pprint(matches[0])
