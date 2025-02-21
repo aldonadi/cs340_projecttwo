@@ -1,6 +1,6 @@
 # Quick Filter buttons
 - Water Rescue:                    # text to be shown on the button
-    breeds:                        # match any of these breed substrings (e.g. "Chesa" matches "Chesapeake"
+    breeds:                        # match any of these breed substrings (e.g. "Chesa" matches "Chesapeake"t
       - Labrador Retriever Mix
       - Chesa
       - Newfoundland
