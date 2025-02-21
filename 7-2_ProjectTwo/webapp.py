@@ -1,4 +1,5 @@
 # Setup the Jupyter version of Dash
+from typing import dataclass_transform
 from jupyter_dash import JupyterDash
 
 # Configure the necessary Python module imports
@@ -21,6 +22,8 @@ import time
 # change animal_shelter and AnimalShelter to match your CRUD Python module file name and class name
 from aac_crud_driver import AnimalShelter
 
+# for loading quick filter buttons from the quick-filters.yml file
+from quick_filter_buttons import QuickFilter, QuickFilters
 
 ###########################
 # Data Manipulation / Model
@@ -90,6 +93,26 @@ app.layout = html.Div([
         html.Span(" ~~ Andrew Wilson, SNHU-340, Winter 2025")
         ]),
 ])
+
+def create_filter_button_bar_html_element():
+    # load the quick filter data from the quick-filters.yml file
+    filters = QuickFilters.load()
+
+    # the array of button HTML elements that will be generated
+    filter_buttons = []
+
+    for filter in filters:
+        button = html.Button(filter.name, className="quick-filter", n_clicks=0, **{"data-query": filter.query_json()})
+        filter_buttons.append(button)
+
+    # the parent <div> for the button bar, with the set of buttons
+    button_bar = html.Div(className="quick-filter-button-bar", children=filter_buttons)
+
+    return button_bar
+
+    
+    
+
 
 #############################################
 # Interaction Between Components / Controller
