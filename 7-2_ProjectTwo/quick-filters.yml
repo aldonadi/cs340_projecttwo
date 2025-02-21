@@ -1,8 +1,8 @@
 # Quick Filter buttons
 - Water Rescue:                    # text to be shown on the button
-    breeds:                        # match any of these breeds
+    breeds:                        # match any of these breed substrings (e.g. "Chesa" matches "Chesapeake"
       - Labrador Retriever Mix
-      - Chesapeake Bay Retriever
+      - Chesa
       - Newfoundland
     sex: Intact Female             # match this 'sex_upon_outcome'
     min-age-in-weeks: 26           # 'age_upon_outcome_in_weeks' must be greater than or equal to this
