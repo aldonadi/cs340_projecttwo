@@ -58,9 +58,10 @@ class QuickFilters:
 
         filters = []
         for filter_data in data:
+            filters = []
+
             for _, filter_name in enumerate(filter_data):   # returns, e.g., _="0", name="Water Rescue"
                 entry = filter_data[filter_name]
-                filters = []
                 
                 breeds = entry.get('breeds')
                 sex = entry.get('sex')
