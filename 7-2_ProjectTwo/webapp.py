@@ -198,7 +198,7 @@ def update_map(viewData, index):
     
 @app.callback(
     Output('datatable-id', 'data'), 
-    [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(0, num_quick_filter_buttons)])
+    [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(1, num_quick_filter_buttons + 1)])
 def apply_quick_filter(*args):
     trigger = callback_context.triggered[0]
     clicked_button_id = trigger["prop_id"].split(".")[0]
