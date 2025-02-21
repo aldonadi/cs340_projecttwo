@@ -10,6 +10,7 @@ import plotly.express as px
 from dash import dash_table
 from dash.dependencies import Input, Output
 
+from dash import callback_context
 
 # Configure the plotting routines
 import numpy as np
@@ -32,6 +33,9 @@ from quick_filter_buttons import QuickFilter, QuickFilters
 # use credentials and DB connection details stored in `db.yml` instead of hardcoded
 shelter = AnimalShelter()
 
+# number of quick-filter buttons for purposes of the callback (will be calculated during button generation)
+num_quick_filter_buttons = 0
+
 # class read method ('find' in my CRUD driver implementation) must support return
 # of list object and accept projection json input
 # sending the read method an empty document requests all documents be returned
@@ -47,6 +51,36 @@ print(f"obtained {total_records} records in {total_time:.2f} seconds.")
 # does not return the '_id' field unless the 'find' method optional argument 'include_id'
 # is set to True
 
+# used to automatically generate the quick-filter button bar
+def create_filter_button_bar_html_element():
+    # load the quick filter data from the quick-filters.yml file
+    filters = QuickFilters.load()
+
+    global num_quick_filter_buttons
+    num_quick_filter_buttons = len(filters)
+
+    # the array of button HTML elements that will be generated
+    filter_buttons = []
+
+    button_number = 1
+
+    for filter in filters:
+        button = html.Button(
+                filter.name,                        # button text
+                className="quick-filter",           # for CSS styling
+                id=f"quick-filter-button-{button_number}",   # to ID which button was clicked in the callback
+                n_clicks=0, 
+                **{"data-query": filter.query_json()})  # the query JSON to give to the CRUD driver
+        filter_buttons.append(button)
+        button_number += 1
+
+    # the parent <div> for the button bar, with the set of buttons
+    button_bar = html.Div(className="quick-filter-button-bar", children=filter_buttons)
+
+    return button_bar
+
+    
+
 
 #########################
 # Dashboard Layout / View
@@ -57,9 +91,7 @@ app.layout = html.Div([
     html.Div(id='hidden-div', style={'display':'none'}),
     html.Center(html.B(html.H1('SNHU CS-340 Dashboard'))),
     html.Hr(),
-    html.Div(className='buttonRow', children=[
-        html.Button("Water Rescue", className="quick-filters", n_clicks=0)
-        ]),
+    create_filter_button_bar_html_element(),
     dash_table.DataTable(
         id='datatable-id',
         columns=[
@@ -94,26 +126,7 @@ app.layout = html.Div([
         ]),
 ])
 
-def create_filter_button_bar_html_element():
-    # load the quick filter data from the quick-filters.yml file
-    filters = QuickFilters.load()
-
-    # the array of button HTML elements that will be generated
-    filter_buttons = []
-
-    for filter in filters:
-        button = html.Button(filter.name, className="quick-filter", n_clicks=0, **{"data-query": filter.query_json()})
-        filter_buttons.append(button)
-
-    # the parent <div> for the button bar, with the set of buttons
-    button_bar = html.Div(className="quick-filter-button-bar", children=filter_buttons)
-
-    return button_bar
-
     
-    
-
-
 #############################################
 # Interaction Between Components / Controller
 #############################################
@@ -183,6 +196,19 @@ def update_map(viewData, index):
               ])
     ]
     
+@app.callback(
+    Output('datatable-id', 'data'), 
+    [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(0, num_quick_filter_buttons)])
+def apply_quick_filter(*args):
+    trigger = callback_context.triggered[0]
+    clicked_button_id = trigger["prop_id"].split(".")[0]
+    print("clicked quick filter button" + clicked_button_id)
+    
+    df = pd.DataFrame.from_records(shelter.find({}))
+
+    
+    return df.to_dict('records')
+
 
 app.run_server(debug=True, port=8050, host="0.0.0.0")
 
