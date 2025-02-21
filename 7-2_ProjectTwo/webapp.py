@@ -55,7 +55,7 @@ app.layout = html.Div([
     html.Center(html.B(html.H1('SNHU CS-340 Dashboard'))),
     html.Hr(),
     html.Div(className='buttonRow', children=[
-        html.Button(className="quick-filters", text="Water Rescue")
+        html.Button("Water Rescue", className="quick-filters", n_clicks=0)
         ]),
     dash_table.DataTable(
         id='datatable-id',
@@ -161,5 +161,5 @@ def update_map(viewData, index):
     ]
     
 
-app.run_server(debug=True)
+app.run_server(debug=True, port=8050, host="0.0.0.0")
 
