@@ -17,6 +17,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+#TODO: remove this
+import pdb
+
 # For logging long-running queries
 import time
 
@@ -202,8 +205,10 @@ def update_map(viewData, index):
 def apply_quick_filter(*args):
     trigger = callback_context.triggered[0]
     clicked_button_id = trigger["prop_id"].split(".")[0]
-    print("clicked quick filter button" + clicked_button_id)
-    
+    print("clicked " + clicked_button_id)
+   
+    pdb.set_trace()
+
     df = pd.DataFrame.from_records(shelter.find({}))
 
     
