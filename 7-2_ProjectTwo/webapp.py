@@ -17,9 +17,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-#TODO: remove this
-import pdb
-
 # For logging long-running queries
 import time
 
@@ -36,8 +33,12 @@ from quick_filter_buttons import QuickFilter, QuickFilters
 # use credentials and DB connection details stored in `db.yml` instead of hardcoded
 shelter = AnimalShelter()
 
+# quick filter button query JSONs
+quick_filter_queries_json = {}
+
 # number of quick-filter buttons for purposes of the callback (will be calculated during button generation)
 num_quick_filter_buttons = 0
+
 
 # class read method ('find' in my CRUD driver implementation) must support return
 # of list object and accept projection json input
@@ -59,6 +60,7 @@ def create_filter_button_bar_html_element():
     # load the quick filter data from the quick-filters.yml file
     filters = QuickFilters.load()
 
+    global quick_filter_queries_json
     global num_quick_filter_buttons
     num_quick_filter_buttons = len(filters)
 
@@ -68,13 +70,25 @@ def create_filter_button_bar_html_element():
     button_number = 1
 
     for filter in filters:
+        button_id = f"quick-filter-button-{button_number}"   # to identify which button was clicked in the callback
+
+        # TODO: consider removing the "data-query" from the button.
+        # My first idea was to use the callback to identify which button ID was clicked (I have figured this part out)
+        # and then to pull the 'data-query' attribute out of the clicked button (I cannot figure out how to do this)
+        # Instead, I am storing the query filter JSON in a global dict (not ideal)
+
+        # create and add the button HTML element for this quick filter
         button = html.Button(
                 filter.name,                        # button text
                 className="quick-filter",           # for CSS styling
-                id=f"quick-filter-button-{button_number}",   # to ID which button was clicked in the callback
+                id=button_id,
                 n_clicks=0, 
-                **{"data-query": filter.query_json()})  # the query JSON to give to the CRUD driver
+                **{"data-query": filter.query_json()})  # the query JSON to give to the CRUD driver # TODO: remove this as vestigial?
         filter_buttons.append(button)
+
+        # add the filter's query JSON to the lookup dict
+        quick_filter_queries_json[button_id] = filter.query_json()
+
         button_number += 1
 
     # the parent <div> for the button bar, with the set of buttons
@@ -206,11 +220,14 @@ def apply_quick_filter(*args):
     trigger = callback_context.triggered[0]
     clicked_button_id = trigger["prop_id"].split(".")[0]
     print("clicked " + clicked_button_id)
-   
-    pdb.set_trace()
+ 
+    # retrieve the query JSON for the selected filter
+    global quick_filter_queries_json
+    clicked_buttons_filter_query_json = quick_filter_queries_json[clicked_button_id]
 
-    df = pd.DataFrame.from_records(shelter.find({}))
+    df = pd.DataFrame.from_records(shelter.find(clicked_buttons_filter_query_json))
 
+    print(df)
     
     return df.to_dict('records')
 
