@@ -102,7 +102,7 @@ def create_filter_button_bar_html_element():
 #########################
 # Dashboard Layout / View
 #########################
-app = JupyterDash('Andrews_6-1_MilestoneApp')
+app = JupyterDash('Andrews_7-2_ProjectTwo')
 
 app.layout = html.Div([
     html.Div(id='hidden-div', style={'display':'none'}),
