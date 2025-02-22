@@ -212,23 +212,32 @@ def update_map(viewData, index):
                            ])
               ])
     ]
-    
+
+# Callback for quick filter buttons:
+#   input: all of the quick filter button n_clicked
+#   output: data frame property of the main data table
 @app.callback(
     Output('datatable-id', 'data'), 
     [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(1, num_quick_filter_buttons + 1)])
 def apply_quick_filter(*args):
     trigger = callback_context.triggered[0]
     clicked_button_id = trigger["prop_id"].split(".")[0]
-    print("clicked " + clicked_button_id)
+
+    # the data table's data frame
+    global df
  
+    # prevent callback errors during app load when no button has been clicked yet
+    if clicked_button_id == "":
+        return df.to_dict('records')    # don't hit the database again; no filters have been applied yet
+
     # retrieve the query JSON for the selected filter
     global quick_filter_queries_json
     clicked_buttons_filter_query_json = quick_filter_queries_json[clicked_button_id]
 
+    # re-query with the selected filter
     df = pd.DataFrame.from_records(shelter.find(clicked_buttons_filter_query_json))
 
-    print(df)
-    
+    # pass the matching results back to the data table
     return df.to_dict('records')
 
 
