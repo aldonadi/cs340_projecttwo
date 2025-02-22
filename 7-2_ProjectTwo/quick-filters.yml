@@ -18,3 +18,14 @@
     sex: Intact Male
     min-age-in-weeks: 26
     max-age-in-weeks: 156
+
+- Disaster or Individual Tracking: 
+    breeds:
+      - Doberman Pin
+      - German Shep
+      - Golden Retr
+      - Bloodhound
+      - Rottweiler
+    sex: Intact Male
+    min-age-in-weeks: 20
+    max-age-in-weeks: 300
