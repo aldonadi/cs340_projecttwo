@@ -91,6 +91,11 @@ def create_filter_button_bar_html_element():
 
         button_number += 1
 
+    # add the final "Clear Filters" button
+    button = html.Button("Clear Filters", className="quick-filter", id="clear-filters", n_clicks=0)
+    filter_buttons.append(button)
+    quick_filter_queries_json["clear-filters"] = {}   # empty JSON query returns all records
+
     # the parent <div> for the button bar, with the set of buttons
     button_bar = html.Div(className="quick-filter-button-bar", children=filter_buttons)
 
@@ -218,7 +223,8 @@ def update_map(viewData, index):
 #   output: data frame property of the main data table
 @app.callback(
     Output('datatable-id', 'data'), 
-    [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(1, num_quick_filter_buttons + 1)])
+    [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(1, num_quick_filter_buttons + 1)],
+    Input("clear-filters", "n_clicks"))
 def apply_quick_filter(*args):
     trigger = callback_context.triggered[0]
     clicked_button_id = trigger["prop_id"].split(".")[0]
