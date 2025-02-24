@@ -35,7 +35,7 @@ from quick_filter_buttons import QuickFilter, QuickFilters
 shelter = AnimalShelter()
 
 # quick filter button query JSONs
-quick_filter_queries_json = {}
+quick_filters = {}
 
 # number of quick-filter buttons for purposes of the callback (will be calculated during button generation)
 num_quick_filter_buttons = 0
@@ -61,7 +61,7 @@ def create_filter_button_bar_html_element():
     # load the quick filter data from the quick-filters.yml file
     filters = QuickFilters.load()
 
-    global quick_filter_queries_json
+    global quick_filters
     global num_quick_filter_buttons
     num_quick_filter_buttons = len(filters)
 
@@ -87,15 +87,22 @@ def create_filter_button_bar_html_element():
                 **{"data-query": filter.query_json()})  # the query JSON to give to the CRUD driver # TODO: remove this as vestigial?
         filter_buttons.append(button)
 
-        # add the filter's query JSON to the lookup dict
-        quick_filter_queries_json[button_id] = filter.query_json()
+        # add the filter's query JSON and name to the lookup dict
+        quick_filters[button_id] = {
+                'filter-name': filter.name,
+                'query-json':  filter.query_json()
+                }
 
         button_number += 1
 
     # add the final "Clear Filters" button
     button = html.Button("Clear Filters", className="quick-filter", id="clear-filters", n_clicks=0)
     filter_buttons.append(button)
-    quick_filter_queries_json["clear-filters"] = {}   # empty JSON query returns all records
+    quick_filters["clear-filters"] = { 'filter-name': '', 'query-json': {} }
+
+    # add a "Current quickfilter" status element
+    current_filter = html.Em(id="current-quick-filter")
+    filter_buttons.append(current_filter)
 
     # the parent <div> for the button bar, with the set of buttons
     button_bar = html.Div(className="quick-filter-button-bar", children=filter_buttons)
@@ -223,12 +230,16 @@ def update_map(viewData, index):
 #   input: all of the quick filter button n_clicked
 #   output: data frame property of the main data table
 @app.callback(
-    Output('datatable-id', 'data'), 
-    [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(1, num_quick_filter_buttons + 1)],
-    Input("clear-filters", "n_clicks"))
+    [Output('datatable-id', 'data'),                # to update the data table with filtered data
+    Output('current-quick-filter', 'children')],        # to tell user which quick filter is selected
+    [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(1, num_quick_filter_buttons + 1)],  # each quick filter button
+    Input("clear-filters", "n_clicks"))             # the 'clear filter' button
 def apply_quick_filter(*args):
     trigger = callback_context.triggered[0]
     clicked_button_id = trigger["prop_id"].split(".")[0]
+
+    # TODO: remove debug breakpoint
+    # import pdb; pdb.set_trace()
 
     # the data table's data frame
     global df
@@ -238,14 +249,19 @@ def apply_quick_filter(*args):
         return df.to_dict('records')    # don't hit the database again; no filters have been applied yet
 
     # retrieve the query JSON for the selected filter
-    global quick_filter_queries_json
-    clicked_buttons_filter_query_json = quick_filter_queries_json[clicked_button_id]
+    global quick_filters
+    clicked_filter_query_json = quick_filters[clicked_button_id]['query-json']
+    clicked_filter_name       = quick_filters[clicked_button_id]['filter-name']
+
+    applied_filter_status_msg = ""
+    if clicked_filter_name != "":
+        applied_filter_status_msg = f"Current quick filter: {clicked_filter_name}"
 
     # re-query with the selected filter
-    df = pd.DataFrame.from_records(shelter.find(clicked_buttons_filter_query_json))
+    df = pd.DataFrame.from_records(shelter.find(clicked_filter_query_json))
 
     # pass the matching results back to the data table
-    return df.to_dict('records')
+    return (df.to_dict('records'), applied_filter_status_msg)
 
 
 app.run_server(debug=True, port=8050, host="0.0.0.0")
