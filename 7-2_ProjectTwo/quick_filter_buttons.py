@@ -68,8 +68,6 @@ class QuickFilters:
                 min_age_in_weeks = entry.get("min-age-in-weeks")
                 max_age_in_weeks = entry.get("max-age-in-weeks")
 
-                print(f"{filter_name}, {breeds}, {sex}, {min_age_in_weeks}, {max_age_in_weeks}")
-
                 filter = QuickFilter(filter_name, breeds, sex, min_age_in_weeks, max_age_in_weeks)
                 filters.append(filter)
 

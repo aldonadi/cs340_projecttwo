@@ -253,8 +253,6 @@ def apply_quick_filter(*args):
     clicked_filter_query_json = quick_filters[clicked_button_id]['query-json']
     clicked_filter_name       = quick_filters[clicked_button_id]['filter-name']
 
-    print(clicked_filter_query_json)
-
     applied_filter_status_msg = ""
     if clicked_filter_name != "":
         applied_filter_status_msg = f"Current quick filter: {clicked_filter_name}"
