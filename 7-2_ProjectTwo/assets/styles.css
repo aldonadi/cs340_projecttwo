@@ -15,8 +15,11 @@
   color: #FFFFFF;
 }
 
-/* highlight the active filter */
-.selected {
-  background-color: #1cfeba;     /* aquamarine */
+#hidden-div {
+  display: none;
 }
 
+#animal-location-map {
+  width: 1000px;
+  height: 500px;
+}

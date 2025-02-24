@@ -1,4 +1,5 @@
 # Setup the Jupyter version of Dash
+from sys import set_asyncgen_hooks
 from typing import dataclass_transform
 from jupyter_dash import JupyterDash
 
@@ -110,7 +111,7 @@ def create_filter_button_bar_html_element():
 app = JupyterDash('Andrews_7-2_ProjectTwo')
 
 app.layout = html.Div([
-    html.Div(id='hidden-div', style={'display':'none'}),
+    html.Div(id='hidden-div'),
     html.Center(html.B(html.H1('SNHU CS-340 Dashboard'))),
     html.Hr(),
     create_filter_button_bar_html_element(),
@@ -202,7 +203,7 @@ def update_map(viewData, index):
 
     # Austin TX is at [30.75, -97.48]
     return [
-        dl.Map(style={'width': '1000px', 'height': '500px'},
+        dl.Map(id="animal-location-map",
               center=[30.75, -97.48], zoom=10, 
               children=[
                   dl.TileLayer(id="base-layer-id"),
