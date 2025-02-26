@@ -104,21 +104,22 @@ def create_filter_button_bar_html_element():
 
     return button_bar
 
-def  get_quick_filter_button_classnames(clicked_button_id, total_buttons):
+
+def get_quick_filter_button_classnames(clicked_button_id, total_buttons):
+    """
+    Based on the given clicked button id string and the total number of buttons, returns a list of
+    CSS class names, one per button, such that only the selected button gets the extra 'selected' 
+    class for styling.
+    """
     class_names = []
     for i in range(1, total_buttons+1):
         button_id = f"quick-filter-button-{i}"
-        print(f"comparing {button_id} to {clicked_button_id}...", end="")   ############
         if button_id == clicked_button_id:
             class_names.append("quick-filter selected") 
-            print("SELECTED")                                               ############
         else:
             class_names.append("quick-filter")
-            print("not selected")                                           ############
 
     return class_names
-
-
 
 
 #########################
