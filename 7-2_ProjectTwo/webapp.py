@@ -254,21 +254,37 @@ def update_breed_chart(data):
     if data is None:
         return []
 
-    global df
+    MAX_BREEDS_IN_PIE_CHART = 15
 
+    # get the frequency counts of breeds from the current data frame
+    global df
     breed_frequencies = df['breed'].value_counts()
 
-    breed_names = list(breed_frequencies.index)
-    breed_counts = list(breed_frequencies.values)
+    # to prevent super unwieldy pie charts with hundreds of slices, only keep the top 15 and lump the rest into "Other breeds"
+    displayed_breeds = []
+    displayed_counts = []
+    if len(breed_frequencies) <= MAX_BREEDS_IN_PIE_CHART:    # at most 15 breeds exist, so no need to consolidate
+        displayed_breeds = breed_frequencies.index
+        displayed_counts = breed_frequencies.values
 
-    print(f"breed_names==={breed_names[1:4]}===")
-    
+    else:     # too many breeds; consolidate
+        # get just the top most-frequent breeds
+        top_breed_freqs =  breed_frequencies.head(MAX_BREEDS_IN_PIE_CHART)
+        
+        # calculate how many breeds are NOT in the top
+        total_breed_count = breed_frequencies.sum()
+        top_breed_count = top_breed_freqs.sum()
+        other_breed_count = (total_breed_count - top_breed_count)
 
-    print(f"breed_count==={breed_counts[1:4]}===")
-    print()
-    print()
+        # pull out the top breed names and counts
+        displayed_breeds = list(top_breed_freqs.index)
+        displayed_counts = list(top_breed_freqs.values)
 
-    return px.pie(names=breed_names, values=breed_counts, hole=0.3)
+        # add the "Other breeds" category at the end
+        displayed_breeds.append("Other breeds")
+        displayed_counts.append(other_breed_count)
+
+    return px.pie(names=displayed_breeds, values=displayed_counts, hole=0.3)
 
 
 # Callback for quick filter buttons:
