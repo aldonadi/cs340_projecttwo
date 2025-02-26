@@ -284,7 +284,12 @@ def update_breed_chart(data):
         displayed_breeds.append("Other breeds")
         displayed_counts.append(other_breed_count)
 
-    return px.pie(names=displayed_breeds, values=displayed_counts, hole=0.3)
+    pie_chart = px.pie(names=displayed_breeds, values=displayed_counts, hole=0.3)
+
+    # make hover show something prettier than 'label=Poodle\nvalue=67'
+    pie_chart.update_traces(hovertemplate="%{label}<br>%{value} records<extra></extra>")
+
+    return pie_chart
 
 
 # Callback for quick filter buttons:
