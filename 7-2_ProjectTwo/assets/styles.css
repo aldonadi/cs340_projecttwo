@@ -15,11 +15,9 @@
   color: #FFFFFF;
 }
 
-/*
-#current-quick-filter {
-  ;
+.quick-filter.selected {
+  background-color: #009b72
 }  
-*/
 
 #hidden-div {
   display: none;
