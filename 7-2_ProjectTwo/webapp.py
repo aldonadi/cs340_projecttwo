@@ -40,7 +40,6 @@ quick_filters = {}
 # number of quick-filter buttons for purposes of the callback (will be calculated during button generation)
 num_quick_filter_buttons = 0
 
-
 # class read method ('find' in my CRUD driver implementation) must support return
 # of list object and accept projection json input
 # sending the read method an empty document requests all documents be returned
@@ -109,7 +108,21 @@ def create_filter_button_bar_html_element():
 
     return button_bar
 
-    
+def  get_quick_filter_button_classnames(clicked_button_id, total_buttons):
+    class_names = []
+    for i in range(1, total_buttons+1):
+        button_id = f"quick-filter-button-{i}"
+        print(f"comparing {button_id} to {clicked_button_id}...", end="")   ############
+        if button_id == clicked_button_id:
+            class_names.append("quick-filter selected") 
+            print("SELECTED")                                               ############
+        else:
+            class_names.append("quick-filter")
+            print("not selected")                                           ############
+
+    return class_names
+
+
 
 
 #########################
@@ -231,26 +244,30 @@ def update_map(viewData, index):
 #   outputs: data frame property of the main data table
 #            a status line stating which quick filter is active
 @app.callback(
-    [Output('datatable-id', 'data'),                # to update the data table with filtered data
-    Output('current-quick-filter', 'children')],        # to tell user which quick filter is selected
-    [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(1, num_quick_filter_buttons + 1)],  # each quick filter button
-    Input("clear-filters", "n_clicks"))             # the 'clear filter' button
+    # to update the data table with filtered data
+    [Output('datatable-id', 'data'),
+    # to tell the user which filter is active  # TODO: remove after button highlighting works
+    Output('current-quick-filter', 'children'),
+    # to set CSS styling for the selected filter's button
+    [Output(f"quick-filter-button-{str(i)}", "className") for i in range(1, num_quick_filter_buttons + 1)]
+    ],
+    
+    # to trigger when a quick filter button is clicked
+    [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(1, num_quick_filter_buttons + 1)],
+    # ... or when the 'clear filter' button is clicked
+    Input("clear-filters", "n_clicks"))
 def apply_quick_filter(*args):
     trigger = callback_context.triggered[0]
-    clicked_button_id = trigger["prop_id"].split(".")[0]
-
-    # TODO: remove debug breakpoint
-    # import pdb; pdb.set_trace()
+    clicked_button_id = trigger["prop_id"].split(".")[0]   # get the clicked button's id
 
     # the data table's data frame
     global df
 
-    print(df)
-    import time; print(time.time())
+    quick_filter_button_classnames = get_quick_filter_button_classnames(clicked_button_id, num_quick_filter_buttons)
 
     # prevent callback errors during app load when no button has been clicked yet
     if clicked_button_id == "":
-        return [df.to_dict('records'), ""]    # don't hit the database again; no filters have been applied yet
+        return [df.to_dict('records'), "", quick_filter_button_classnames]    # don't hit the database again; no filters have been applied yet
 
     # retrieve the query JSON for the selected filter
     global quick_filters
@@ -264,7 +281,7 @@ def apply_quick_filter(*args):
     # re-query with the selected filter
     df = pd.DataFrame.from_records(shelter.find(clicked_filter_query_json))
 
-    return [df.to_dict('records'), applied_filter_status_msg]
+    return [df.to_dict('records'), applied_filter_status_msg, quick_filter_button_classnames]
 
 
 app.run_server(debug=True, port=8050, host="0.0.0.0")
