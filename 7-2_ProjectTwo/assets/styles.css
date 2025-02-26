@@ -1,5 +1,6 @@
 /* contains the CSS styling for HTML elements in the AnimalShelter web app. */
 
+/* quick-filter button syle, not selected */
 .quick-filter {
   margin: 5px;
   padding: 8px 16px;
