@@ -72,7 +72,6 @@ def create_filter_button_bar_html_element():
     for filter in filters:
         button_id = f"quick-filter-button-{button_number}"   # to identify which button was clicked in the callback
 
-        # TODO: consider removing the "data-query" from the button.
         # My first idea was to use the callback to identify which button ID was clicked (I have figured this part out)
         # and then to pull the 'data-query' attribute out of the clicked button (I cannot figure out how to do this)
         # Instead, I am storing the query filter JSON in a global dict (not ideal)
@@ -82,8 +81,8 @@ def create_filter_button_bar_html_element():
                 filter.name,                        # button text
                 className="quick-filter",           # for CSS styling
                 id=button_id,
-                n_clicks=0, 
-                **{"data-query": filter.query_json()})  # the query JSON to give to the CRUD driver # TODO: remove this as vestigial?
+                n_clicks=0) 
+
         filter_buttons.append(button)
 
         # add the filter's query JSON and name to the lookup dict
