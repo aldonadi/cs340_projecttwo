@@ -40,7 +40,17 @@
   display: none;
 }
 
-#animal-location-map {
+.viz {
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+}
+
+.location-map {
   width: 1000px;
   height: 500px;
+}
+
+.breed-chart {
+  font-size: 1em;  /* prevent empty ruleset */
 }

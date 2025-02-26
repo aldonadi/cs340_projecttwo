@@ -134,31 +134,38 @@ app.layout = html.Div([
         ]),
     html.Hr(),
     create_filter_button_bar_html_element(),
-    dash_table.DataTable(
-        id='datatable-id',
-        columns=[
-            {"name": i, "id": i, "deletable": False, "selectable": True} for i in df.columns
-        ],
-        data=df.to_dict('records'),
-        editable=False,
-        filter_action="native",
-        sort_action="native",
-        sort_mode="multi",
-        column_selectable=False,
-        row_selectable="single",
-        row_deletable=False,
-        selected_columns=[],
-        selected_rows=[0],
-        page_action="native",
-        page_current=0,
-        page_size=10
+    html.Div(className="data-table", children=
+        dash_table.DataTable(
+            id='datatable-id',
+            columns=[
+                {"name": i, "id": i, "deletable": False, "selectable": True} for i in df.columns
+            ],
+            data=df.to_dict('records'),
+            editable=False,
+            filter_action="native",
+            sort_action="native",
+            sort_mode="multi",
+            column_selectable=False,
+            row_selectable="single",
+            row_deletable=False,
+            selected_columns=[],
+            selected_rows=[0],
+            page_action="native",
+            page_current=0,
+            page_size=10
+        )
     ),
     html.Br(),
     html.Hr(),
-    html.Div(
-            id='animal-location-map',
-            className='col s12 m6',
-            ),
+    html.Div(className="viz", children=[
+        html.Div(
+                id='animal-location-map-container',
+                className='location-map',
+                ),
+        html.Div(
+                id='breed-chart-container',
+                className='breed-chart')
+    ]),
     html.Hr(),
 
     # unique signature
@@ -192,7 +199,7 @@ def update_styles(selected_columns):
 # one value in the list.
 # The iloc method allows for a row, column notation to pull data from the datatable
 @app.callback(
-    Output('animal-location-map', "children"),
+    Output('animal-location-map-container', "children"),
     [Input('datatable-id', "derived_virtual_data"),
      Input('datatable-id', "derived_virtual_selected_rows")])
 def update_map(viewData, index):
