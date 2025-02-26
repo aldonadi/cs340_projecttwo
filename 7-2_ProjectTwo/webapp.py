@@ -128,7 +128,10 @@ app = JupyterDash('Andrews_7-2_ProjectTwo')
 
 app.layout = html.Div([
     html.Div(id='hidden-div'),
-    html.Center(html.B(html.H1('SNHU CS-340 Dashboard'))),
+    html.Div(className = "top-header", children=[
+        html.Div(className="logo", children=html.Img(src="assets/grazioso-salvare-logo.png")),
+        html.Div(className="header-text", children=(html.H1('SNHU CS-340 Dashboard')))
+        ]),
     html.Hr(),
     create_filter_button_bar_html_element(),
     dash_table.DataTable(
