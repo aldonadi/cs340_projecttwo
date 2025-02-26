@@ -99,10 +99,6 @@ def create_filter_button_bar_html_element():
     filter_buttons.append(button)
     quick_filters["clear-filters"] = { 'filter-name': '', 'query-json': {} }
 
-    # add a "Current quickfilter" status element
-    current_filter = html.Em(id="current-quick-filter")
-    filter_buttons.append(current_filter)
-
     # the parent <div> for the button bar, with the set of buttons
     button_bar = html.Div(className="quick-filter-button-bar", children=filter_buttons)
 
@@ -246,8 +242,6 @@ def update_map(viewData, index):
 @app.callback(
     # to update the data table with filtered data
     [Output('datatable-id', 'data'),
-    # to tell the user which filter is active  # TODO: remove after button highlighting works
-    Output('current-quick-filter', 'children'),
     # to set CSS styling for the selected filter's button
     [Output(f"quick-filter-button-{str(i)}", "className") for i in range(1, num_quick_filter_buttons + 1)]
     ],
@@ -267,21 +261,16 @@ def apply_quick_filter(*args):
 
     # prevent callback errors during app load when no button has been clicked yet
     if clicked_button_id == "":
-        return [df.to_dict('records'), "", quick_filter_button_classnames]    # don't hit the database again; no filters have been applied yet
+        return [df.to_dict('records'), quick_filter_button_classnames]    # don't hit the database again; no filters have been applied yet
 
     # retrieve the query JSON for the selected filter
     global quick_filters
     clicked_filter_query_json = quick_filters[clicked_button_id]['query-json']
-    clicked_filter_name       = quick_filters[clicked_button_id]['filter-name']
-
-    applied_filter_status_msg = ""
-    if clicked_filter_name != "":
-        applied_filter_status_msg = f"Current quick filter: {clicked_filter_name}"
 
     # re-query with the selected filter
     df = pd.DataFrame.from_records(shelter.find(clicked_filter_query_json))
 
-    return [df.to_dict('records'), applied_filter_status_msg, quick_filter_button_classnames]
+    return [df.to_dict('records'), quick_filter_button_classnames]
 
 
 app.run_server(debug=True, port=8050, host="0.0.0.0")
