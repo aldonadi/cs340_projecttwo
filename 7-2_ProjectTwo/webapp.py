@@ -45,7 +45,7 @@ num_quick_filter_buttons = 0
 # sending the read method an empty document requests all documents be returned
 print("Retrieving all records...", end="")
 start_time = time.time()
-df = pd.DataFrame.from_records(shelter.find({}))
+df = pd.DataFrame.from_records(shelter.find({}, limit=20))   # TODO: remove the record limit for production
 end_time = time.time()
 total_time = end_time - start_time
 total_records = len(df.to_dict(orient='records'))
