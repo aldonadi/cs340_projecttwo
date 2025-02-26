@@ -205,7 +205,7 @@ def update_styles(selected_columns):
 def update_map(viewData, index):
     dff = pd.DataFrame.from_dict(viewData)
     
-    # prevent getting "Callback error updating animal-location-map.children" on app startup when this
+    # prevent getting "Callback error updating animal-location-map-container.children" on app startup when this
     # callback is run before any row is selected
     if dff.empty:
         return []

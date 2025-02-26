@@ -47,10 +47,13 @@
 }
 
 .location-map {
-  width: 1000px;
+  flex: 1;
+}
+
+#animal-location-map {
   height: 500px;
 }
 
 .breed-chart {
-  font-size: 1em;  /* prevent empty ruleset */
+  flex: 1;
 }
