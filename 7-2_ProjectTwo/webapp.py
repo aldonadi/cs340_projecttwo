@@ -153,7 +153,7 @@ app.layout = html.Div([
     html.Br(),
     html.Hr(),
     html.Div(
-            id='map-id',
+            id='animal-location-map',
             className='col s12 m6',
             ),
     html.Hr(),
@@ -189,13 +189,13 @@ def update_styles(selected_columns):
 # one value in the list.
 # The iloc method allows for a row, column notation to pull data from the datatable
 @app.callback(
-    Output('map-id', "children"),
+    Output('animal-location-map', "children"),
     [Input('datatable-id', "derived_virtual_data"),
      Input('datatable-id', "derived_virtual_selected_rows")])
 def update_map(viewData, index):
     dff = pd.DataFrame.from_dict(viewData)
     
-    # prevent getting "Callback error updating map-id.children" on app startup when this
+    # prevent getting "Callback error updating animal-location-map.children" on app startup when this
     # callback is run before any row is selected
     if dff.empty:
         return []
