@@ -1,6 +1,4 @@
 # Setup the Jupyter version of Dash
-from sys import set_asyncgen_hooks
-from typing import dataclass_transform
 from jupyter_dash import JupyterDash
 
 # Configure the necessary Python module imports
@@ -14,9 +12,7 @@ from dash.dependencies import Input, Output
 from dash import callback_context
 
 # Configure the plotting routines
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # For logging long-running queries
 import time
@@ -25,7 +21,7 @@ import time
 from aac_crud_driver import AnimalShelter
 
 # for loading quick filter buttons from the quick-filters.yml file
-from quick_filter_buttons import QuickFilter, QuickFilters
+from quick_filter_buttons import QuickFilters
 
 ###########################
 # Data Manipulation / Model
