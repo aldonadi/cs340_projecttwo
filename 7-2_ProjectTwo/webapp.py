@@ -244,10 +244,13 @@ def apply_quick_filter(*args):
 
     # the data table's data frame
     global df
- 
+
+    print(df)
+    import time; print(time.time())
+
     # prevent callback errors during app load when no button has been clicked yet
     if clicked_button_id == "":
-        return df.to_dict('records')    # don't hit the database again; no filters have been applied yet
+        return [df.to_dict('records'), ""]    # don't hit the database again; no filters have been applied yet
 
     # retrieve the query JSON for the selected filter
     global quick_filters
@@ -261,8 +264,7 @@ def apply_quick_filter(*args):
     # re-query with the selected filter
     df = pd.DataFrame.from_records(shelter.find(clicked_filter_query_json))
 
-    # pass the matching results back to the data table
-    return (df.to_dict('records'), applied_filter_status_msg)
+    return [df.to_dict('records'), applied_filter_status_msg]
 
 
 app.run_server(debug=True, port=8050, host="0.0.0.0")
