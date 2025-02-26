@@ -16,7 +16,8 @@
 }
 
 .quick-filter.selected {
-  background-color: #009b72
+  background-color: #009b72;    /* shamrock green */
+  font-weight: bold;
 }  
 
 #hidden-div {
