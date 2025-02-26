@@ -160,7 +160,10 @@ app.layout = html.Div([
     html.Div(className="viz", children=[
         html.Div(
                 id='breed-chart-container',
-                className='breed-chart'),
+                className='breed-chart',
+                children=
+                    dcc.Graph(id="breed-chart")
+                ),
         html.Div(
                 id='animal-location-map-container',
                 className='location-map')
@@ -243,6 +246,30 @@ def update_map(viewData, index):
                            ])
               ])
     ]
+
+@app.callback(
+    Output('breed-chart', "figure"),
+    Input('datatable-id', "data"))
+def update_breed_chart(data):
+    if data is None:
+        return []
+
+    global df
+
+    breed_frequencies = df['breed'].value_counts()
+
+    breed_names = list(breed_frequencies.index)
+    breed_counts = list(breed_frequencies.values)
+
+    print(f"breed_names==={breed_names[1:4]}===")
+    
+
+    print(f"breed_count==={breed_counts[1:4]}===")
+    print()
+    print()
+
+    return px.pie(names=breed_names, values=breed_counts, hole=0.3)
+
 
 # Callback for quick filter buttons:
 #   inputs: all of the quick filter button n_clicked
