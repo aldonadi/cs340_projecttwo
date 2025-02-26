@@ -227,8 +227,9 @@ def update_map(viewData, index):
     ]
 
 # Callback for quick filter buttons:
-#   input: all of the quick filter button n_clicked
-#   output: data frame property of the main data table
+#   inputs: all of the quick filter button n_clicked
+#   outputs: data frame property of the main data table
+#            a status line stating which quick filter is active
 @app.callback(
     [Output('datatable-id', 'data'),                # to update the data table with filtered data
     Output('current-quick-filter', 'children')],        # to tell user which quick filter is selected
