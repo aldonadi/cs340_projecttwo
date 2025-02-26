@@ -159,12 +159,11 @@ app.layout = html.Div([
     html.Hr(),
     html.Div(className="viz", children=[
         html.Div(
-                id='animal-location-map-container',
-                className='location-map',
-                ),
-        html.Div(
                 id='breed-chart-container',
-                className='breed-chart')
+                className='breed-chart'),
+        html.Div(
+                id='animal-location-map-container',
+                className='location-map')
     ]),
     html.Hr(),
 
