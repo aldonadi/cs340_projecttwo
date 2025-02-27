@@ -204,7 +204,6 @@ def update_map(view_data, index):
         return []
 
     # if no row is selected, display geolocation of the first row
-    print(f"index={index} ({type(index)})")
     if index is None:
         row = 0
     elif index == []:
@@ -217,8 +216,6 @@ def update_map(view_data, index):
     colnum_loc_lat = 13
     colnum_loc_long = 14
     colnum_name = 9
-
-    
 
     # collect the necessary information from the selected row
     breed       =  dff.iloc[row, colnum_breed]
