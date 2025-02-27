@@ -62,9 +62,7 @@ def create_filter_button_bar_html_element():
 
     # the array of button HTML elements that will be generated
     filter_buttons = []
-
     button_number = 1
-
     for filter in filters:
         button_id = f"quick-filter-button-{button_number}"   # to identify which button was clicked in the callback
 
