@@ -154,10 +154,7 @@ app.layout = html.Div([
     html.Div(className="viz", children=[
         html.Div(
                 id='breed-chart-container',
-                className='breed-chart',
-                children=
-                    dcc.Graph(id="breed-chart")
-                ),
+                className='breed-chart'),
         html.Div(
                 id='animal-location-map-container',
                 className='location-map')
@@ -242,11 +239,11 @@ def update_map(view_data, index):
     ]
 
 @app.callback(
-    Output('breed-chart', "figure"),    # todo change this to return a Div that might say "no records match curreny filter"
+    Output('breed-chart-container', "children"),
     Input('datatable-id', "derived_virtual_data"))
 def update_breed_chart(view_data):
     if view_data is None:
-        return None
+        return []
 
     MAX_BREEDS_IN_PIE_CHART = 15
 
@@ -254,7 +251,7 @@ def update_breed_chart(view_data):
     dff = pd.DataFrame.from_dict(view_data)
 
     if len(dff) == 0:
-        return None
+        return []
 
     breed_frequencies = dff['breed'].value_counts()
 
@@ -287,7 +284,7 @@ def update_breed_chart(view_data):
     # make hover show something prettier than 'label=Poodle\nvalue=67'
     pie_chart.update_traces(hovertemplate="%{label}<br>%{value} records<extra></extra>")
 
-    return pie_chart
+    return dcc.Chart(figure=pie_chart)
 
 
 # Callback for quick filter buttons:
