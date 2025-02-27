@@ -242,16 +242,20 @@ def update_map(view_data, index):
     ]
 
 @app.callback(
-    Output('breed-chart', "figure"),
+    Output('breed-chart', "figure"),    # todo change this to return a Div that might say "no records match curreny filter"
     Input('datatable-id', "derived_virtual_data"))
 def update_breed_chart(view_data):
     if view_data is None:
-        return []
+        return None
 
     MAX_BREEDS_IN_PIE_CHART = 15
 
     # get the frequency counts of breeds from the currently-shown table data
     dff = pd.DataFrame.from_dict(view_data)
+
+    if len(dff) == 0:
+        return None
+
     breed_frequencies = dff['breed'].value_counts()
 
     # to prevent super unwieldy pie charts with hundreds of slices, only keep the top 15 and lump the rest into "Other breeds"
