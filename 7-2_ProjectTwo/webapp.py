@@ -206,6 +206,8 @@ def update_map(view_data, index):
     # if no row is selected, display geolocation of the first row
     if index is None:
         row = 0
+    elif index == []:
+        row = -1
     else:
         row = index[0]
    
