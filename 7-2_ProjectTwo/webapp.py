@@ -200,8 +200,8 @@ def update_styles(selected_columns):
     Output('animal-location-map-container', "children"),
     [Input('datatable-id', "derived_virtual_data"),
      Input('datatable-id', "derived_virtual_selected_rows")])
-def update_map(viewData, index):
-    dff = pd.DataFrame.from_dict(viewData)
+def update_map(view_data, index):
+    dff = pd.DataFrame.from_dict(view_data)
     
     # prevent getting "Callback error updating animal-location-map-container.children" on app startup when this
     # callback is run before any row is selected
