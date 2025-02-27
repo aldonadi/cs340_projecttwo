@@ -243,16 +243,16 @@ def update_map(view_data, index):
 
 @app.callback(
     Output('breed-chart', "figure"),
-    Input('datatable-id', "data"))
+    Input('datatable-id', "derived_virtual_data"))
 def update_breed_chart(data):
     if data is None:
         return []
 
     MAX_BREEDS_IN_PIE_CHART = 15
 
-    # get the frequency counts of breeds from the current data frame
-    global df
-    breed_frequencies = df['breed'].value_counts()
+    # get the frequency counts of breeds from the currently-shown table data
+    dff = pd.DataFrame.from_dict(data)
+    breed_frequencies = dff['breed'].value_counts()
 
     # to prevent super unwieldy pie charts with hundreds of slices, only keep the top 15 and lump the rest into "Other breeds"
     displayed_breeds = []
