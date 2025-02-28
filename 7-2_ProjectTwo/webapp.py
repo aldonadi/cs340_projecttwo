@@ -259,6 +259,8 @@ def update_map(view_data, index):
     return [animal_map]
 
 
+# This callback will update the breed composition pie chart whenever the list
+# of visible records change (due to a new query or live-filtering in the table)
 @app.callback(
     Output('breed-chart-container', "children"),
     Input('datatable-id', "derived_virtual_data"))
