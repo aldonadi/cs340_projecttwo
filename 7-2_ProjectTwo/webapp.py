@@ -197,24 +197,22 @@ def update_styles(selected_columns):
      Input('datatable-id', "derived_virtual_selected_rows")])
 def update_map(view_data, index):
 
-    map = dl.Map(id="animal-location-map",
-              center=[30.75, -97.48], zoom=10, 
-              children=[
-                  dl.TileLayer(id="base-layer-id"),
-                  
-              ])
+    animal_map = dl.Map(
+        id="animal-location-map",
+        center=[30.75, -97.48], zoom=10,
+        children=[dl.TileLayer(id="base-layer-id")]
+    )
 
+    # get the DataFrame representing data currently visible in the table
     dff = pd.DataFrame.from_dict(view_data)
     
     # prevent getting "Callback error updating animal-location-map-container.children" on app startup when this
     # callback is run before any row is selected
     if not dff.empty:
-        
-
         # if no row is selected, display geolocation of the first row
         if index is None:
             row = 0
-        elif index == []:
+        elif not index:
             row = -1
         else:
             row = index[0]
@@ -239,11 +237,11 @@ def update_map(view_data, index):
                                ])
                            ])
 
-        map.children.append(marker)
+        animal_map.children.append(marker)
 
 
     # Austin TX is at [30.75, -97.48]
-    return [map]
+    return [animal_map]
 
 @app.callback(
     Output('breed-chart-container', "children"),
@@ -266,8 +264,7 @@ def update_breed_chart(view_data):
     breed_frequencies = dff['breed'].value_counts()
 
     # to prevent super unwieldy pie charts with hundreds of slices, only keep the top 15 and lump the rest into "Other breeds"
-    displayed_breeds = []
-    displayed_counts = []
+
     if len(breed_frequencies) <= MAX_BREEDS_IN_PIE_CHART:    # at most 15 breeds exist, so no need to consolidate
         displayed_breeds = breed_frequencies.index
         displayed_counts = breed_frequencies.values
