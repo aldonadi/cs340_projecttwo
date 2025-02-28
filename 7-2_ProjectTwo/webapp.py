@@ -63,7 +63,7 @@ def create_filter_button_bar_html_element():
     # the array of button HTML elements that will be generated
     filter_buttons = []
     button_number = 1
-    for filter in filters:
+    for filt in filters:
         button_id = f"quick-filter-button-{button_number}"   # to identify which button was clicked in the callback
 
         # My first idea was to use the callback to identify which button ID was clicked (I have figured this part out)
@@ -72,7 +72,7 @@ def create_filter_button_bar_html_element():
 
         # create and add the button HTML element for this quick filter
         button = html.Button(
-                filter.name,                        # button text
+                filt.name,                        # button text
                 className="quick-filter",           # for CSS styling
                 id=button_id,
                 n_clicks=0) 
@@ -81,8 +81,8 @@ def create_filter_button_bar_html_element():
 
         # add the filter's query JSON and name to the lookup dict
         quick_filters[button_id] = {
-                'filter-name': filter.name,
-                'query-json':  filter.query_json()
+                'filter-name': filt.name,
+                'query-json':  filt.query_json()
                 }
 
         button_number += 1
