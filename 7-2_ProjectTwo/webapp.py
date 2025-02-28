@@ -42,6 +42,7 @@ num_quick_filter_buttons = 0
 # sending the read method an empty document requests all documents be returned
 print("Retrieving all records...", end="")
 start_time = time.time()
+# NOTE: Database Hit
 df = pd.DataFrame.from_records(shelter.find({}, limit=20))  # TODO: remove the record limit for production
 end_time = time.time()
 total_time = end_time - start_time
@@ -267,20 +268,23 @@ def update_map(view_data, index):
 def update_breed_chart(view_data):
     MAX_BREEDS_IN_PIE_CHART = 15
 
-    # get the frequency counts of breeds from the currently-shown table data
+    # get a DataFrame representing the visible filtered records
     dff = pd.DataFrame.from_dict(view_data)
 
+    # if there are no records visible, show a message to the user instead of a pie chart
     if len(dff) == 0:
         return html.Div(
             children="Sorry, can't show a pie chart since no records match the current filters.",
             className="empty-breed-chart"
         )
 
+    # get the frequency counts of breeds from the currently-shown table data
     breed_frequencies = dff['breed'].value_counts()
 
-    # to prevent super unwieldy pie charts with hundreds of slices, only keep the top 15 and lump the rest into "Other breeds"
-
-    if len(breed_frequencies) <= MAX_BREEDS_IN_PIE_CHART:  # at most 15 breeds exist, so no need to consolidate
+    # to prevent super unwieldy pie charts with hundreds of slices,
+    # keep ONLY the top 15 and lump the rest into "Other breeds"
+    if len(breed_frequencies) <= MAX_BREEDS_IN_PIE_CHART:
+        # at most 15 breeds are shown, so there is no need to consolidate
         displayed_breeds = breed_frequencies.index
         displayed_counts = breed_frequencies.values
 
@@ -301,37 +305,44 @@ def update_breed_chart(view_data):
         displayed_breeds.append("Other breeds")
         displayed_counts.append(other_breed_count)
 
+    # create the pie chart
     pie_chart = px.pie(names=displayed_breeds, values=displayed_counts, hole=0.3)
 
     # make hover show something prettier than 'label=Poodle\nvalue=67'
     pie_chart.update_traces(hovertemplate="%{label}<br>%{value} records<extra></extra>")
+
+    # make the chart use more of its Div space and share its space with the map
     pie_chart.update_layout(margin=dict(t=5, b=5, l=5, r=5), autosize=True)
 
     return dcc.Graph(id="breed-chart", figure=pie_chart)
 
 
 # Callback for quick filter buttons:
-#   inputs: all of the quick filter button n_clicked
-#   outputs: data frame property of the main data table
-#            a status line stating which quick filter is active
+# Based on which button was clicked, it requiries the backend database with the
+# specific query for that button. It also updates the button classes so that
+# active button can get special "active filter" styling
 @app.callback(
-    # to update the data table with filtered data
     [Output('datatable-id', 'data'),
-     # to set CSS styling for the selected filter's button
      [Output(f"quick-filter-button-{str(i)}", "className") for i in range(1, num_quick_filter_buttons + 1)]
      ],
-
-    # to trigger when a quick filter button is clicked
     [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(1, num_quick_filter_buttons + 1)],
-    # ... or when the 'clear filter' button is clicked
     Input("clear-filters", "n_clicks"))
-def apply_quick_filter(*args):
+def apply_quick_filter(*args):  # variable args due to having an unknown number of filter buttons
+
+    # use callback_context to determine which button was clicked
+    # I used this approach rather than the conventional "n_clicked" because I
+    # was trying to obtain the button ID and its query without needing to store
+    # a bunch of global variables like `quick_filters`. I ended up failing to
+    # implement my scheme due in part to this project using older versions of
+    # dash.
     trigger = callback_context.triggered[0]
     clicked_button_id = trigger["prop_id"].split(".")[0]  # get the clicked button's id
 
     # the data table's data frame
     global df
 
+    # returns "quick-filter" class for all buttons, with the active button
+    # getting the "quick-filter selected" classes.
     quick_filter_button_classnames = get_quick_filter_button_classnames(clicked_button_id, num_quick_filter_buttons)
 
     # prevent callback errors during app load when no button has been clicked yet
@@ -344,6 +355,7 @@ def apply_quick_filter(*args):
     clicked_filter_query_json = quick_filters[clicked_button_id]['query-json']
 
     # re-query with the selected filter
+    # NOTE: Database Hit
     df = pd.DataFrame.from_records(shelter.find(clicked_filter_query_json))
 
     return [df.to_dict('records'), quick_filter_button_classnames]
