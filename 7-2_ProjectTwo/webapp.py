@@ -213,7 +213,7 @@ def update_map(view_data, index):
     # the map should always be displayed, even if no record is selected
     animal_map = dl.Map(
         id="animal-location-map",
-        center=[30.75, -97.48], zoom=10,
+        center=[30.75, -97.48], zoom=8,
         children=[dl.TileLayer(id="base-layer-id")]
     )
 
