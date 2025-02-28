@@ -2,11 +2,12 @@
 
 import yaml
 
-DEFAULT_QUICK_FILTER_YAML_FILENAME="quick-filters.yml"
+DEFAULT_QUICK_FILTER_YAML_FILENAME = "quick-filters.yml"
+
 
 class QuickFilter:
     def __init__(self, name, breeds, sex, min_age_in_weeks, max_age_in_weeks):
-        self.name = name 
+        self.name = name
         self.breeds = breeds
         self.sex = sex
         self.min_age_in_weeks = min_age_in_weeks
@@ -18,8 +19,8 @@ class QuickFilter:
         age_range = {}
 
         if self.breeds:
-            pattern = f"({'|'.join(self.breeds)})"    # => e.g. "(breed1|breed2|breed3)"
-            query["breed"] = { "$regex": pattern  }
+            pattern = f"({'|'.join(self.breeds)})"  # => e.g. "(breed1|breed2|breed3)"
+            query["breed"] = {"$regex": pattern}
 
         if self.sex:
             query["sex_upon_outcome"] = self.sex
@@ -35,16 +36,15 @@ class QuickFilter:
 
         return query
 
-
-
     @staticmethod
     def is_dict_empty(dictionary):
-        return not bool(dictionary)      # empty dicts evaluate to False
+        return not bool(dictionary)  # empty dicts evaluate to False
+
 
 class QuickFilters:
 
     @staticmethod
-    def load(filters_yaml_file = ""):
+    def load(filters_yaml_file=""):
         # load default filename if not specified in argument
         if filters_yaml_file == "":
             filters_yaml_file = DEFAULT_QUICK_FILTER_YAML_FILENAME
@@ -55,14 +55,14 @@ class QuickFilters:
                 data = yaml.safe_load(file)
         except FileNotFoundError:
             raise FileNotFoundError(f"Quick filter YAML file '{filters_yaml_file}' not found")
-        
+
         # list to collect the parsed filters
         filters = []
         for filter_data in data:
 
-            for _, filter_name in enumerate(filter_data):   # returns, e.g., _="0", name="Water Rescue"
+            for _, filter_name in enumerate(filter_data):  # returns, e.g., _="0", name="Water Rescue"
                 entry = filter_data[filter_name]
-                
+
                 breeds = entry.get('breeds')
                 sex = entry.get('sex')
                 min_age_in_weeks = entry.get("min-age-in-weeks")
@@ -72,9 +72,3 @@ class QuickFilters:
                 filters.append(filter)
 
         return filters
-
-
-
-
-
-
