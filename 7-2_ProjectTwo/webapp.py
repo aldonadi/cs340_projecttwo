@@ -17,7 +17,7 @@ import pandas as pd
 # For logging long-running queries
 import time
 
-# change animal_shelter and AnimalShelter to match your CRUD Python module file name and class name
+# driver to interface with MongoDB backend server
 from aac_crud_driver import AnimalShelter
 
 # for loading quick filter buttons from the quick-filters.yml file
@@ -33,7 +33,8 @@ shelter = AnimalShelter()
 # quick filter button query JSONs
 quick_filters = {}
 
-# number of quick-filter buttons for purposes of the callback (will be calculated during button generation)
+# number of quick-filter buttons for purposes of the callback
+# (will be calculated during button generation)
 num_quick_filter_buttons = 0
 
 # class read method ('find' in my CRUD driver implementation) must support return
@@ -48,12 +49,15 @@ total_records = len(df.to_dict(orient='records'))
 print(f"obtained {total_records} records in {total_time:.2f} seconds.")
 
 
-# dropping the '_id' field is not necessary for my CRUD driver because my 'find' implementation
-# does not return the '_id' field unless the 'find' method optional argument 'include_id'
-# is set to True
+# dropping the '_id' field is not necessary for my CRUD driver because my 'find'
+# implementation does not return the '_id' field unless the 'find' method
+# optional argument 'include_id' is set to True
 
-# used to automatically generate the quick-filter button bar
 def create_filter_button_bar_html_element():
+    """
+    Uses the quick filters defined in the YAML file and creates a bar of
+    buttons that can be clicked to enable the given quick filter.
+    """
     # load the quick filter data from the quick-filters.yml file
     filters = QuickFilters.load()
 
@@ -65,10 +69,12 @@ def create_filter_button_bar_html_element():
     filter_buttons = []
     button_number = 1
     for filt in filters:
-        button_id = f"quick-filter-button-{button_number}"  # to identify which button was clicked in the callback
+        #  to identify which button was clicked in the callback
+        button_id = f"quick-filter-button-{button_number}"
 
-        # My first idea was to use the callback to identify which button ID was clicked (I have figured this part out)
-        # and then to pull the 'data-query' attribute out of the clicked button (I cannot figure out how to do this)
+        # My first idea was to use the callback to identify which button ID was
+        # clicked (I have figured this part out) and then to pull the 'data-query'
+        # attribute out of the clicked button (I cannot figure out how to do this)
         # Instead, I am storing the query filter JSON in a global dict (not ideal)
 
         # create and add the button HTML element for this quick filter
@@ -89,8 +95,15 @@ def create_filter_button_bar_html_element():
         button_number += 1
 
     # add the final "Clear Filters" button
-    button = html.Button("Clear Filters", className="quick-filter", id="clear-filters", n_clicks=0)
+    button = html.Button(
+        children="Clear Filters",
+        className="quick-filter",
+        id="clear-filters",
+        n_clicks=0
+    )
+
     filter_buttons.append(button)
+    # TODO: fix this kludgy mess: associate filter json with button ID
     quick_filters["clear-filters"] = {'filter-name': '', 'query-json': {}}
 
     # the parent <div> for the button bar, with the set of buttons
@@ -101,9 +114,9 @@ def create_filter_button_bar_html_element():
 
 def get_quick_filter_button_classnames(clicked_button_id, total_buttons):
     """
-    Based on the given clicked button id string and the total number of buttons, returns a list of
-    CSS class names, one per button, such that only the selected button gets the extra 'selected' 
-    class for styling.
+    Based on the given clicked button id string and the total number of buttons,
+    returns a list of CSS class names, one per button, such that only the selected
+    button gets the extra 'selected' class for styling.
     """
     class_names = []
     for i in range(1, total_buttons + 1):
@@ -186,17 +199,18 @@ def update_styles(selected_columns):
 
 
 # This callback will update the geolocation chart for the selected data entry
-# derived_virtual_data will be the set of data available from the datatable in the form of 
-# a dictionary.
-# derived_virtual_selected_rows will be the selected row(s) in the table in the form of
-# a list. For this application, we are only permitting single row selection so there is only
-# one value in the list.
+# derived_virtual_data will be the set of data available from the datatable in
+# the form of a dictionary.
+# derived_virtual_selected_rows will be the selected row(s) in the table in the
+# form of a list. For this application, we are only permitting single row
+# selection so there is only one value in the list.
 # The iloc method allows for a row, column notation to pull data from the datatable
 @app.callback(
     Output('animal-location-map-container', "children"),
     [Input('datatable-id', "derived_virtual_data"),
      Input('datatable-id', "derived_virtual_selected_rows")])
 def update_map(view_data, index):
+    # the map should always be displayed, even if no record is selected
     animal_map = dl.Map(
         id="animal-location-map",
         center=[30.75, -97.48], zoom=10,
