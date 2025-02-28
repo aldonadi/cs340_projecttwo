@@ -265,9 +265,6 @@ def update_map(view_data, index):
     Output('breed-chart-container', "children"),
     Input('datatable-id', "derived_virtual_data"))
 def update_breed_chart(view_data):
-    if view_data is None:
-        return []
-
     MAX_BREEDS_IN_PIE_CHART = 15
 
     # get the frequency counts of breeds from the currently-shown table data
