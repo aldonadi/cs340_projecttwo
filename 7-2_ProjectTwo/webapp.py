@@ -1,4 +1,4 @@
-# Setup the Jupyter version of Dash
+# Set up the Jupyter version of Dash
 from jupyter_dash import JupyterDash
 
 # Configure the necessary Python module imports
@@ -184,7 +184,7 @@ def update_styles(selected_columns):
     } for i in selected_columns]
 
 
-# This callback will update the geo-location chart for the selected data entry
+# This callback will update the geolocation chart for the selected data entry
 # derived_virtual_data will be the set of data available from the datatable in the form of 
 # a dictionary.
 # derived_virtual_selected_rows will be the selected row(s) in the table in the form of
