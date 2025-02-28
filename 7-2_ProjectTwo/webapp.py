@@ -196,40 +196,41 @@ def update_styles(selected_columns):
     [Input('datatable-id', "derived_virtual_data"),
      Input('datatable-id', "derived_virtual_selected_rows")])
 def update_map(view_data, index):
+
+    map = dl.Map(id="animal-location-map",
+              center=[30.75, -97.48], zoom=10, 
+              children=[
+                  dl.TileLayer(id="base-layer-id"),
+                  
+              ])
+
     dff = pd.DataFrame.from_dict(view_data)
     
     # prevent getting "Callback error updating animal-location-map-container.children" on app startup when this
     # callback is run before any row is selected
-    if dff.empty:
-        return []
+    if not dff.empty:
+        
 
-    # if no row is selected, display geolocation of the first row
-    if index is None:
-        row = 0
-    elif index == []:
-        row = -1
-    else:
-        row = index[0]
+        # if no row is selected, display geolocation of the first row
+        if index is None:
+            row = 0
+        elif index == []:
+            row = -1
+        else:
+            row = index[0]
    
-    # document magic column numbers
-    colnum_breed = 4
-    colnum_loc_lat = 13
-    colnum_loc_long = 14
-    colnum_name = 9
+        # document magic column numbers
+        colnum_breed = 4
+        colnum_loc_lat = 13
+        colnum_loc_long = 14
+        colnum_name = 9
 
-    # collect the necessary information from the selected row
-    breed       =  dff.iloc[row, colnum_breed]
-    animal_name =  dff.iloc[row, colnum_name]
-    coordinates = [dff.iloc[row, colnum_loc_lat], dff.iloc[row, colnum_loc_long]]
+        # collect the necessary information from the selected row
+        breed       =  dff.iloc[row, colnum_breed]
+        animal_name =  dff.iloc[row, colnum_name]
+        coordinates = [dff.iloc[row, colnum_loc_lat], dff.iloc[row, colnum_loc_long]]
 
-    # Austin TX is at [30.75, -97.48]
-    return [
-        dl.Map(id="animal-location-map",
-              center=[30.75, -97.48], zoom=10, 
-              children=[
-                  dl.TileLayer(id="base-layer-id"),
-                  # Marker with tool tip and popup
-                  dl.Marker(position=coordinates,
+        marker = dl.Marker(position=coordinates,
                            children=[
                                dl.Tooltip(breed),
                                dl.Popup([
@@ -237,8 +238,12 @@ def update_map(view_data, index):
                                    html.P(animal_name)
                                ])
                            ])
-              ])
-    ]
+
+        map.children.append(marker)
+
+
+    # Austin TX is at [30.75, -97.48]
+    return [map]
 
 @app.callback(
     Output('breed-chart-container', "children"),
