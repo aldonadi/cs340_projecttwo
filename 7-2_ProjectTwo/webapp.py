@@ -285,6 +285,7 @@ def update_breed_chart(view_data):
 
     # make hover show something prettier than 'label=Poodle\nvalue=67'
     pie_chart.update_traces(hovertemplate="%{label}<br>%{value} records<extra></extra>")
+    pie_chart.update_layout(margin=dict(t=0, b=0, l=0, r=0))
 
     return dcc.Graph(id="breed-chart", figure=pie_chart)
 
