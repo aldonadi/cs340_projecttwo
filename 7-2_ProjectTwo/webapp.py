@@ -213,15 +213,16 @@ def update_map(view_data, index):
     # the map should always be displayed, even if no record is selected
     animal_map = dl.Map(
         id="animal-location-map",
-        center=[30.75, -97.48], zoom=8,
+        center=[30.75, -97.48],    # Austin TX is at [30.75, -97.48]
+        zoom=8,   # TODO: ensure dropped pins are never offscreen
         children=[dl.TileLayer(id="base-layer-id")]
     )
 
     # get the DataFrame representing data currently visible in the table
     dff = pd.DataFrame.from_dict(view_data)
 
-    # prevent getting "Callback error updating animal-location-map-container.children" on app startup when this
-    # callback is run before any row is selected
+    # only create the map marker/pin if records are shown in the current filter
+    # and if one is selected
     if not dff.empty:
         # if no row is selected, display geolocation of the first row
         if index is None:
@@ -242,6 +243,7 @@ def update_map(view_data, index):
         animal_name = dff.iloc[row, colnum_name]
         coordinates = [dff.iloc[row, colnum_loc_lat], dff.iloc[row, colnum_loc_long]]
 
+        # create and add the map marker
         marker = dl.Marker(position=coordinates,
                            children=[
                                dl.Tooltip(breed),
@@ -253,7 +255,7 @@ def update_map(view_data, index):
 
         animal_map.children.append(marker)
 
-    # Austin TX is at [30.75, -97.48]
+
     return [animal_map]
 
 
