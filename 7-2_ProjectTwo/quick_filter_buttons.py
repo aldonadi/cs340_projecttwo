@@ -54,11 +54,8 @@ class QuickFilters:
     objects.
     """
     @staticmethod
-    def load(filters_yaml_file=""):
+    def load(filters_yaml_file=DEFAULT_QUICK_FILTER_YAML_FILENAME):
         """Parses the YAML file for quick filters, retuning them in a list."""
-        # load default filename if not specified in argument
-        if filters_yaml_file == "":
-            filters_yaml_file = DEFAULT_QUICK_FILTER_YAML_FILENAME
 
         # try to load the quick filters YAML file into a YAML object
         try:
