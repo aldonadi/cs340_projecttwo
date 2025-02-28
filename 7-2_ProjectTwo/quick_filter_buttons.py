@@ -6,6 +6,10 @@ DEFAULT_QUICK_FILTER_YAML_FILENAME = "quick-filters.yml"
 
 
 class QuickFilter:
+    """
+    Encapsulates a single quick filter object as read from the YAML file.
+    Includes a name and builds the JSON query object.
+    """
     def __init__(self, name, breeds, sex, min_age_in_weeks, max_age_in_weeks):
         self.name = name
         self.breeds = breeds
@@ -14,12 +18,14 @@ class QuickFilter:
         self.max_age_in_weeks = max_age_in_weeks
 
     def query_json(self):
+        """Returns the assembled JSON query object for this filter."""
         query = {}
 
+        # will be filled in if min and/or max age was specified
         age_range = {}
 
         if self.breeds:
-            pattern = f"({'|'.join(self.breeds)})"  # => e.g. "(breed1|breed2|breed3)"
+            pattern = f"({'|'.join(self.breeds)})"  # e.g. "(breed1|breed2|breed3)"
             query["breed"] = {"$regex": pattern}
 
         if self.sex:
@@ -38,13 +44,18 @@ class QuickFilter:
 
     @staticmethod
     def is_dict_empty(dictionary):
+        """Returns True/False"""
         return not bool(dictionary)  # empty dicts evaluate to False
 
 
 class QuickFilters:
-
+    """
+    Class that implements the actual YAML parsing and creates the QuickFilter
+    objects.
+    """
     @staticmethod
     def load(filters_yaml_file=""):
+        """Parses the YAML file for quick filters, retuning them in a list."""
         # load default filename if not specified in argument
         if filters_yaml_file == "":
             filters_yaml_file = DEFAULT_QUICK_FILTER_YAML_FILENAME
