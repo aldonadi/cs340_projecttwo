@@ -41,11 +41,12 @@ num_quick_filter_buttons = 0
 # sending the read method an empty document requests all documents be returned
 print("Retrieving all records...", end="")
 start_time = time.time()
-df = pd.DataFrame.from_records(shelter.find({}, limit=20))   # TODO: remove the record limit for production
+df = pd.DataFrame.from_records(shelter.find({}, limit=20))  # TODO: remove the record limit for production
 end_time = time.time()
 total_time = end_time - start_time
 total_records = len(df.to_dict(orient='records'))
 print(f"obtained {total_records} records in {total_time:.2f} seconds.")
+
 
 # dropping the '_id' field is not necessary for my CRUD driver because my 'find' implementation
 # does not return the '_id' field unless the 'find' method optional argument 'include_id'
@@ -64,7 +65,7 @@ def create_filter_button_bar_html_element():
     filter_buttons = []
     button_number = 1
     for filt in filters:
-        button_id = f"quick-filter-button-{button_number}"   # to identify which button was clicked in the callback
+        button_id = f"quick-filter-button-{button_number}"  # to identify which button was clicked in the callback
 
         # My first idea was to use the callback to identify which button ID was clicked (I have figured this part out)
         # and then to pull the 'data-query' attribute out of the clicked button (I cannot figure out how to do this)
@@ -72,25 +73,25 @@ def create_filter_button_bar_html_element():
 
         # create and add the button HTML element for this quick filter
         button = html.Button(
-                filt.name,                        # button text
-                className="quick-filter",           # for CSS styling
-                id=button_id,
-                n_clicks=0) 
+            filt.name,  # button text
+            className="quick-filter",  # for CSS styling
+            id=button_id,
+            n_clicks=0)
 
         filter_buttons.append(button)
 
         # add the filter's query JSON and name to the lookup dict
         quick_filters[button_id] = {
-                'filter-name': filt.name,
-                'query-json':  filt.query_json()
-                }
+            'filter-name': filt.name,
+            'query-json': filt.query_json()
+        }
 
         button_number += 1
 
     # add the final "Clear Filters" button
     button = html.Button("Clear Filters", className="quick-filter", id="clear-filters", n_clicks=0)
     filter_buttons.append(button)
-    quick_filters["clear-filters"] = { 'filter-name': '', 'query-json': {} }
+    quick_filters["clear-filters"] = {'filter-name': '', 'query-json': {}}
 
     # the parent <div> for the button bar, with the set of buttons
     button_bar = html.Div(className="quick-filter-button-bar", children=filter_buttons)
@@ -105,10 +106,10 @@ def get_quick_filter_button_classnames(clicked_button_id, total_buttons):
     class for styling.
     """
     class_names = []
-    for i in range(1, total_buttons+1):
+    for i in range(1, total_buttons + 1):
         button_id = f"quick-filter-button-{i}"
         if button_id == clicked_button_id:
-            class_names.append("quick-filter selected") 
+            class_names.append("quick-filter selected")
         else:
             class_names.append("quick-filter")
 
@@ -122,42 +123,42 @@ app = JupyterDash('Andrews_7-2_ProjectTwo')
 
 app.layout = html.Div([
     html.Div(id='hidden-div'),
-    html.Div(className = "top-header", children=[
+    html.Div(className="top-header", children=[
         html.Div(className="logo", children=html.Img(src="assets/grazioso-salvare-logo.png")),
         html.Div(className="header-text", children=(html.H1('SNHU CS-340 Dashboard')))
-        ]),
+    ]),
     html.Hr(),
     create_filter_button_bar_html_element(),
     html.Div(className="data-table", children=
-        dash_table.DataTable(
-            id='datatable-id',
-            columns=[
-                {"name": i, "id": i, "deletable": False, "selectable": True} for i in df.columns
-            ],
-            data=df.to_dict('records'),
-            editable=False,
-            filter_action="native",
-            sort_action="native",
-            sort_mode="multi",
-            column_selectable=False,
-            row_selectable="single",
-            row_deletable=False,
-            selected_columns=[],
-            selected_rows=[0],
-            page_action="native",
-            page_current=0,
-            page_size=10
-        )
-    ),
+    dash_table.DataTable(
+        id='datatable-id',
+        columns=[
+            {"name": i, "id": i, "deletable": False, "selectable": True} for i in df.columns
+        ],
+        data=df.to_dict('records'),
+        editable=False,
+        filter_action="native",
+        sort_action="native",
+        sort_mode="multi",
+        column_selectable=False,
+        row_selectable="single",
+        row_deletable=False,
+        selected_columns=[],
+        selected_rows=[0],
+        page_action="native",
+        page_current=0,
+        page_size=10
+    )
+             ),
     html.Br(),
     html.Hr(),
     html.Div(className="viz", children=[
         html.Div(
-                id='breed-chart-container',
-                className='breed-chart'),
+            id='breed-chart-container',
+            className='breed-chart'),
         html.Div(
-                id='animal-location-map-container',
-                className='location-map')
+            id='animal-location-map-container',
+            className='location-map')
     ]),
     html.Hr(),
 
@@ -165,21 +166,21 @@ app.layout = html.Div([
     html.Div(id="unique-signature", children=[
         html.Img(src="/assets/glider.png", title="The Hacker Glider"),
         html.Span(" ~~ Andrew Wilson, SNHU-340, Winter 2025")
-        ]),
+    ]),
 ])
 
-    
+
 #############################################
 # Interaction Between Components / Controller
 #############################################
-#This callback will highlight a row on the data table when the user selects it
+# This callback will highlight a row on the data table when the user selects it
 @app.callback(
     Output('datatable-id', 'style_data_conditional'),
     [Input('datatable-id', 'selected_columns')]
 )
 def update_styles(selected_columns):
     return [{
-        'if': { 'column_id': i },
+        'if': {'column_id': i},
         'background_color': '#D2F3FF'
     } for i in selected_columns]
 
@@ -196,7 +197,6 @@ def update_styles(selected_columns):
     [Input('datatable-id', "derived_virtual_data"),
      Input('datatable-id', "derived_virtual_selected_rows")])
 def update_map(view_data, index):
-
     animal_map = dl.Map(
         id="animal-location-map",
         center=[30.75, -97.48], zoom=10,
@@ -205,7 +205,7 @@ def update_map(view_data, index):
 
     # get the DataFrame representing data currently visible in the table
     dff = pd.DataFrame.from_dict(view_data)
-    
+
     # prevent getting "Callback error updating animal-location-map-container.children" on app startup when this
     # callback is run before any row is selected
     if not dff.empty:
@@ -216,7 +216,7 @@ def update_map(view_data, index):
             row = -1
         else:
             row = index[0]
-   
+
         # document magic column numbers
         colnum_breed = 4
         colnum_loc_lat = 13
@@ -224,8 +224,8 @@ def update_map(view_data, index):
         colnum_name = 9
 
         # collect the necessary information from the selected row
-        breed       =  dff.iloc[row, colnum_breed]
-        animal_name =  dff.iloc[row, colnum_name]
+        breed = dff.iloc[row, colnum_breed]
+        animal_name = dff.iloc[row, colnum_name]
         coordinates = [dff.iloc[row, colnum_loc_lat], dff.iloc[row, colnum_loc_long]]
 
         marker = dl.Marker(position=coordinates,
@@ -239,9 +239,9 @@ def update_map(view_data, index):
 
         animal_map.children.append(marker)
 
-
     # Austin TX is at [30.75, -97.48]
     return [animal_map]
+
 
 @app.callback(
     Output('breed-chart-container', "children"),
@@ -256,23 +256,23 @@ def update_breed_chart(view_data):
     dff = pd.DataFrame.from_dict(view_data)
 
     if len(dff) == 0:
-        return html.Div(                                                                 
-                children="Sorry, can't show a pie chart since no records match the current filters.",
-                className="empty-breed-chart"
-        )                                            
+        return html.Div(
+            children="Sorry, can't show a pie chart since no records match the current filters.",
+            className="empty-breed-chart"
+        )
 
     breed_frequencies = dff['breed'].value_counts()
 
     # to prevent super unwieldy pie charts with hundreds of slices, only keep the top 15 and lump the rest into "Other breeds"
 
-    if len(breed_frequencies) <= MAX_BREEDS_IN_PIE_CHART:    # at most 15 breeds exist, so no need to consolidate
+    if len(breed_frequencies) <= MAX_BREEDS_IN_PIE_CHART:  # at most 15 breeds exist, so no need to consolidate
         displayed_breeds = breed_frequencies.index
         displayed_counts = breed_frequencies.values
 
-    else:     # too many breeds; consolidate
+    else:  # too many breeds; consolidate
         # get just the top most-frequent breeds
-        top_breed_freqs =  breed_frequencies.head(MAX_BREEDS_IN_PIE_CHART)
-        
+        top_breed_freqs = breed_frequencies.head(MAX_BREEDS_IN_PIE_CHART)
+
         # calculate how many breeds are NOT in the top
         total_breed_count = breed_frequencies.sum()
         top_breed_count = top_breed_freqs.sum()
@@ -302,17 +302,17 @@ def update_breed_chart(view_data):
 @app.callback(
     # to update the data table with filtered data
     [Output('datatable-id', 'data'),
-    # to set CSS styling for the selected filter's button
-    [Output(f"quick-filter-button-{str(i)}", "className") for i in range(1, num_quick_filter_buttons + 1)]
-    ],
-    
+     # to set CSS styling for the selected filter's button
+     [Output(f"quick-filter-button-{str(i)}", "className") for i in range(1, num_quick_filter_buttons + 1)]
+     ],
+
     # to trigger when a quick filter button is clicked
     [Input(f"quick-filter-button-{str(i)}", "n_clicks") for i in range(1, num_quick_filter_buttons + 1)],
     # ... or when the 'clear filter' button is clicked
     Input("clear-filters", "n_clicks"))
 def apply_quick_filter(*args):
     trigger = callback_context.triggered[0]
-    clicked_button_id = trigger["prop_id"].split(".")[0]   # get the clicked button's id
+    clicked_button_id = trigger["prop_id"].split(".")[0]  # get the clicked button's id
 
     # the data table's data frame
     global df
@@ -321,7 +321,8 @@ def apply_quick_filter(*args):
 
     # prevent callback errors during app load when no button has been clicked yet
     if clicked_button_id == "":
-        return [df.to_dict('records'), quick_filter_button_classnames]    # don't hit the database again; no filters have been applied yet
+        return [df.to_dict('records'),
+                quick_filter_button_classnames]  # don't hit the database again; no filters have been applied yet
 
     # retrieve the query JSON for the selected filter
     global quick_filters
@@ -334,4 +335,3 @@ def apply_quick_filter(*args):
 
 
 app.run_server(debug=True, port=8050, host="0.0.0.0")
-
