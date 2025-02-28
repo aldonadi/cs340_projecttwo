@@ -64,10 +64,11 @@ class QuickFilters:
         except FileNotFoundError:
             raise FileNotFoundError(f"Quick filter YAML file '{filters_yaml_file}' not found")
 
-        # list to collect the parsed filters
+        # parse each filter into a QuickFilter object and store in the list
         filters = []
         for filter_data in data:
 
+            # first arg in the enumerator is an index int which we don't need
             for _, filter_name in enumerate(filter_data):  # returns, e.g., _="0", name="Water Rescue"
                 entry = filter_data[filter_name]
 
