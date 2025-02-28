@@ -253,7 +253,10 @@ def update_breed_chart(view_data):
     dff = pd.DataFrame.from_dict(view_data)
 
     if len(dff) == 0:
-        return []
+        return html.Div(                                                                 
+                children="Sorry, can't show a pie chart since no records match the current filters.",
+                className="empty-breed-chart"
+        )                                            
 
     breed_frequencies = dff['breed'].value_counts()
 

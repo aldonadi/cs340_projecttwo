@@ -57,3 +57,10 @@
 .breed-chart {
   flex: 1;
 }
+
+.empty-breed-chart {
+  vertical-align: middle;
+  text-align: center;
+  font-style: italic;
+  padding: 25px;
+}
