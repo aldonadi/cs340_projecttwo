@@ -59,9 +59,18 @@ def create_filter_button_bar_html_element():
     Uses the quick filters defined in the YAML file and creates a bar of
     buttons that can be clicked to enable the given quick filter.
     """
-    # load the quick filter data from the quick-filters.yml file
-    filters = QuickFilters.load()
 
+    # load the quick filter data from the quick-filters.yml file
+    filters = []
+    try:
+        filters = QuickFilters.load()
+    except Exception as e:
+        # if there is an error, the app continues, but no quick filter buttons
+        # will be displayed
+        print(f"Error loading quick filters: {e}")
+        return []
+
+    # TODO: restructure to not need these kludgy global variables
     global quick_filters
     global num_quick_filter_buttons
     num_quick_filter_buttons = len(filters)
