@@ -1,0 +1,67 @@
+/* contains the CSS styling for HTML elements in the AnimalShelter web app. */
+
+/* quick-filter button syle, not selected */
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  width: 128px;
+}
+
+.header-text {
+  text-align: center;
+  flex-grow: 1;
+}
+
+.quick-filter {
+  margin: 5px;
+  padding: 8px 16px;
+  background-color: #007bff;    /* azure */
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.quick-filter:hover {
+  background-color: #0056b3;    /* sapphire */
+  color: #FFFFFF;
+}
+
+.quick-filter.selected {
+  background-color: #009b72;    /* shamrock green */
+  font-weight: bold;
+}  
+
+#hidden-div {
+  display: none;
+}
+
+.viz {
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+}
+
+.location-map {
+  flex: 1;
+}
+
+#animal-location-map {
+  height: 500px;
+}
+
+.breed-chart {
+  flex: 1;
+}
+
+.empty-breed-chart {
+  vertical-align: middle;
+  text-align: center;
+  font-style: italic;
+  padding: 10%;
+  height: 100%;
+}

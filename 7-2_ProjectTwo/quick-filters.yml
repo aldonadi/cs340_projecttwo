@@ -1,0 +1,31 @@
+# Quick Filter buttons
+- Water Rescue:                    # text to be shown on the button
+    breeds:                        # match any of these breed substrings (e.g. "Chesa" matches "Chesapeake"t
+      - Labrador Retriever Mix
+      - Chesa
+      - Newfoundland
+    sex: Intact Female             # match this 'sex_upon_outcome'
+    min-age-in-weeks: 26           # 'age_upon_outcome_in_weeks' must be greater than or equal to this
+    max-age-in-weeks: 156          # 'age_upon_outcome_in_weeks' must be less than or equal to this
+
+- Mountain/Wilderness Rescue:
+    breeds:
+      - German Shepherd
+      - Alaskan Malamute
+      - Old English Sheepdog
+      - Siberian Husky
+      - Rottweiler
+    sex: Intact Male
+    min-age-in-weeks: 26
+    max-age-in-weeks: 156
+
+- Disaster or Individual Tracking: 
+    breeds:
+      - Doberman Pin
+      - German Shep
+      - Golden Retr
+      - Bloodhound
+      - Rottweiler
+    sex: Intact Male
+    min-age-in-weeks: 20
+    max-age-in-weeks: 300
