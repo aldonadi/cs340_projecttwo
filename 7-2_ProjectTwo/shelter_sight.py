@@ -1,3 +1,13 @@
+# ProjectTwoDashboard - ShelterSight Web Dashboard
+#
+# Andrew Wilson, SNHU, CS-340 Winter 2025
+#
+# Professor: Dr. James Webb
+#
+# 7-2 Project Two
+#
+# Due 2/23/2025
+
 # Set up the Jupyter version of Dash
 from jupyter_dash import JupyterDash
 
@@ -370,4 +380,4 @@ def apply_quick_filter(*args):  # variable args due to having an unknown number 
     return [df.to_dict('records'), quick_filter_button_classnames]
 
 
-app.run_server(debug=True, port=8050, host="0.0.0.0")
+app.run_server(debug=True, port=8050, host="localhost")
