@@ -1,5 +1,7 @@
 # CS 340 Project Two: ShelterSight
 
+*Note: The [Module 8 Journal reflection](#reflection) is located below.*
+
 ## What is it?
 
 **ShelterSight** is a Dash-based dashboard web app for filtering, sorting,
@@ -159,6 +161,31 @@ the script, practicing the sequence, setting up the files for best presentation,
 running through a dozen or so takes with mistakes, needing to re-do the recording
 after making UI changes to the app, I probably spent 4 hours in total working on 
 the screen recording.
+
+# Reflection
+
+Ensuring source code is maintainable, readable, and adaptable is a challenge.
+Especially as the project grows and new functionality is built on top of older
+components, the code can become tangled, messy, and unintelligible. One
+strategy I used was to try to collect common functionality into separate
+classes and move them to their own files. For example, the MongoDB database
+interface driver was developed separately into its own unit that the dashboard
+simply calls one or two methods on. This approach enables the driver module to
+be used by other apps without having to carefully and surgically remove it from
+the main dashboard app.
+
+To understand the requirements for this project, I started by reading the
+requirements document several times to get the full picture. I then read
+through it carefully notating or writing down the discrete requirements and put
+them in a checkoff list. I built each feature (quick filter buttons, pie chart,
+etc) one at a time in its own feature branch in the git repository. I sought to
+keep the code in the main app as simple and clean as possible. One design goal
+I had was to make configuration and modification as easy as possible for the
+end user. For example, with the quick filter buttons, rather than adding Dash
+code in the main app for each button that was specified in the requirements, I
+wrote a whole quick_filters module and system for reading quick filters in from
+a YAML file. This approach hopefully makes it simple for end users to add quick
+filters without even needing to understand Dash, Python, or MongoDB.
 
 ## Links
 
