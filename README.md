@@ -187,6 +187,13 @@ wrote a whole quick_filters module and system for reading quick filters in from
 a YAML file. This approach hopefully makes it simple for end users to add quick
 filters without even needing to understand Dash, Python, or MongoDB.
 
+Computer scientists turn high-level desires and requirements into executable
+and maintainable computer code. The computer scientist must understand the
+technologies and hardware being used so that the programs run efficiently.
+Finally, the computer scientist must be able to communicate effectively with
+the customer to prevent mismatches between what the customer actually wants and
+what the program actually does.
+
 ## Links
 
 * https://www.mongodb.com/
