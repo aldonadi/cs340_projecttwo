@@ -1,0 +1,14 @@
+# Server connection details
+hostname: localhost
+port: 27017
+
+# Credentials
+username: user1
+password: password1234
+
+# Name of the shelter database
+db_name: shelter
+
+# Name of the document containing shelter documents
+collection_name: animals
+
